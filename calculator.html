@@ -90,6 +90,7 @@
     </head>
     <body>
         <h1 style="text-align: center;">Basic Calculator</h1>
+        <p id="recent" style="color: grey;"></p>
         <div class="result">
             <input id="display" type="text" placeholder="Enter here"/>
             <button id="backspace" onClick='backspace()'>&lt;</button>
@@ -135,6 +136,7 @@
             }
             
             function calculate() {
+                document.getElementById("recent").innerHTML = line.value;
                 line.value = eval(line.value);
             }
             
