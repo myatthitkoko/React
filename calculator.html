@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Arithmetic Unit</title>
+        <style>
+            body {
+    			max-width: 300px;
+    			margin: auto;
+    			font-family: 'Courier New', monospace;
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+            
+            #numbers {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            #operators {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            #controls {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            button {
+                height: 70px;
+                font-size: 32pt;
+                font-family: 'Courier New', monospace;
+            }
+
+            .result {
+                display: flex;
+            }
+            
+            .result input {
+                width: 100%;
+                font-size: 32px;
+                font-family: 'Courier New', monospace;
+            }
+
+            #clearAll, #backspace {
+                background: red;
+                color: white;
+            }
+
+            #controls button, #operators button{
+                font-weight: bold;
+            }
+
+            h1 {
+                display: none;
+            }
+
+            @media (min-width: 768px) {
+                body {
+                    max-width: 700px;
+                }
+
+                h1 {
+                    display: flex;
+                    justify-content: center;
+                }
+            }
+            
+        </style>
+    </head>
+    <body>
+        <h1 style="text-align: center;">Basic Calculator</h1>
+        <div class="result">
+            <input id="display" type="text" placeholder="Enter here"/>
+            <button id="backspace" onClick='backspace()'><</button>
+        </div>
+        <div class="body">
+            <div id="controls">
+                <button id="leftBrack" onClick='display("(")'>(</button>
+                <button id="rightBrack" onClick='display(")")'>)</button>
+                <button id="go" onClick='calculate()'>=</button>
+            </div>
+            <div id="operators">
+                <button id="plus" onClick='display("+")'>+</button>
+                <button id="minus" onClick='display("-")'>-</button>
+                <button id="times" onClick='display("*")'>×</button>
+                <button id="divide" onClick='display("/")'>÷</button>
+            </div>
+            <div id="numbers">
+                <button id="point" onClick='display(".")'>.</button>
+                <button id="0" onClick='display("0")'>0</button>
+                <button id="clearAll" onClick='clearAll()'>AC</button>
+            </div>
+        </div>
+        <script>
+            line = document.getElementById("display");
+            function loadIcons() {
+                let html = "";
+                for (let i = 1; i < 10; i++) {
+                    html += "<button id='"+ i +"' onClick='display("+ i +")'>" + i + "</button>"
+                }
+                document.getElementById("numbers").innerHTML = html + document.getElementById("numbers").innerHTML;                
+            }
+
+            function display(i) {
+                line.value += i;
+            }
+
+            function clearAll() {
+                document.getElementById("display").value = "";
+            }
+
+            function backspace() {
+                line.value = line.value.slice(0, -1);
+            }
+            
+            function calculate() {
+                line.value = eval(line.value);
+            }
+            
+            loadIcons();
+
+            document.getElementById("display").addEventListener("keydown", function(event) {
+               if (event.key === "Enter") {
+                   calculate();
+               } 
+            });
+        </script>
+    </body>
+</html>
