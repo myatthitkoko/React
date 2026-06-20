@@ -54,7 +54,7 @@
 
 	function displayTasks() {
 		let html = "";
-		for (i = 0; i < tasks.length; i++) {
+		for (let i = 0; i < tasks.length; i++) {
 			html += "<li> — " + tasks[i] + "<button class='cross' onclick='removeTask(" + i + ")'>X</button>" + "</li>";
 		}
 		document.getElementById("list").innerHTML = html;
@@ -65,18 +65,18 @@
 	}
 
 	function loadTasks() {
-		saved = localStorage.getItem("tasks");
+		const saved = localStorage.getItem("tasks");
 		if (saved !== null) {
 			tasks = JSON.parse(saved);
 		}
 	}
 
 	function addTask() {
-		tasksInput = document.getElementById("task");
-		if (tasksInput.value != "") {
+		const tasksInput = document.getElementById("task");
+		if (tasksInput.value.trim() !== "") {
 			tasks.push(tasksInput.value);
 		}
-		tasksInput.value = ""
+		tasksInput.value = "";
 		refresh();
 	}
 
