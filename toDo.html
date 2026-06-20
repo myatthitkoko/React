@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+	<!--This mini project is based on the work of w3schools tutorial-->
+	<!--https://www.w3schools.com/js/js_project_todo.asp-->
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Minimal To Do List</title>
+	</head>
+	<style>
+
+		body {
+			max-width: 300px;
+			margin: auto;
+			font-family: 'Courier New', monospace;
+		}
+
+		input, button {
+			font-family: 'Courier New', monospace;
+			font-size: 16px;
+		}
+
+		.controls {
+			display: flex;
+			flex-direction: row;
+		}
+		
+		li {
+			display: flex;
+			justify-content: space-between;
+			margin: 20px 0px;
+		}
+
+		ul {
+			padding: 0px;
+		}
+
+		.cross {
+			background: red;
+		}
+
+		@media (min-width: 768px) {
+			body {
+				max-width: 700px;
+			}
+		}
+	</style>
+	<script>
+		let tasks = [];
+
+	function refresh() {
+		saveTasks();
+		displayTasks();
+	}
+
+	function displayTasks() {
+		let html = "";
+		for (i = 0; i < tasks.length; i++) {
+			html += "<li> — " + tasks[i] + "<button class='cross' onclick='removeTask(" + i + ")'>X</button>" + "</li>";
+		}
+		document.getElementById("list").innerHTML = html;
+	}
+
+	function saveTasks() {
+		localStorage.setItem("tasks", JSON.stringify(tasks));
+	}
+
+	function loadTasks() {
+		saved = localStorage.getItem("tasks");
+		if (saved !== null) {
+			tasks = JSON.parse(saved);
+		}
+	}
+
+	function addTask() {
+		tasksInput = document.getElementById("task");
+		if (tasksInput.value != "") {
+			tasks.push(tasksInput.value);
+		}
+		tasksInput.value = ""
+		refresh();
+	}
+
+	function clearAll() {
+		tasks = [];
+		refresh();
+	}
+
+	function removeTask(i) {
+		tasks.splice(i, 1);
+		refresh();
+	}
+
+	document.addEventListener('DOMContentLoaded', () => {
+		loadTasks();
+		refresh();
+	});
+
+	</script>
+	<body>
+		<h1>To Do List</h1>
+		<div class="controls">
+			<input id="task" type="text" placeholder="New task" maxlength=100 style="width: 100%;"/>
+			<button id="addBtn" onclick="addTask()">Add</button>
+			<button id="clearBtn" onclick="clearAll()">Clear</button>
+		</div>
+		<ul id="list">
+		</ul>
+		<script>
+			document.getElementById("task").addEventListener("keydown", function(event) {
+				if (event.key === "Enter") {
+					addTask();
+				}
+			});
+		</script>
+	</body>
+</html>
