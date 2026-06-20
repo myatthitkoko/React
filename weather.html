@@ -35,6 +35,7 @@
 		  const reply = await fetch(cityURL);
 		  const result = await reply.json();
 		  console.log(result);
+		  const place = result.address.city || result.address.town || result.address.village || result.address.county;
 			
 		  const url = "https://api.open-meteo.com/v1/forecast?latitude=" + position.coords.latitude + "&longitude=" + position.coords.longitude + "&hourly=precipitation_probability&current=temperature_2m,precipitation,rain,cloud_cover&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch";
 		  const response = await fetch(url);
@@ -43,7 +44,7 @@
 	
 		  console.log(data);
 
-		  y.innerHTML = result.address.town + ", " + result.address.state;
+		  y.innerHTML = place + ", " + result.address.state;
 		  x.innerHTML = data.current.temperature_2m + " " + data.current_units.temperature_2m;
 		}
 		
