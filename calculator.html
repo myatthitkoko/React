@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -34,6 +33,12 @@
                 height: 70px;
                 font-size: 32pt;
                 font-family: 'Courier New', monospace;
+                border-radius: 20px;
+            }
+
+            #numbers, #controls, #operators {
+                gap: 10px;
+                margin: 10px auto;
             }
 
             .result {
@@ -76,7 +81,7 @@
         <h1 style="text-align: center;">Basic Calculator</h1>
         <div class="result">
             <input id="display" type="text" placeholder="Enter here"/>
-            <button id="backspace" onClick='backspace()'><</button>
+            <button id="backspace" onClick='backspace()'>&lt;</button>
         </div>
         <div class="body">
             <div id="controls">
