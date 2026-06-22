@@ -1,59 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Weather</title>
-</head>
-<body style="background:#0D0D0D; color:#FFFAFA "">
-	<div style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100vh;">
-		<h1>Weather System API</h1>
-		<p id="message">Location access is required to get weather data at your position.</p>
-		<div>
-			<h2 id="city"></h2>
-			<p style="font-size: 72pt;" id="temp"></p>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Weather</title>
+		<style>
+			h1 {
+				width: 100%;
+				text-align: center;
+			}
+			p {
+				font-size: 30pt;
+				margin: 0 auto;
+			}
+			
+			.content {
+				max-width: 350px;
+				margin: 0 auto;
+			}
+	
+			.content div {
+				border: white solid 1px;
+				margin: 20px 0px;
+				min-height: 200px;
+				background-size: cover;
+				border-radius: 30px;
+				padding: 0px 20px;
+			}
+	
+			.position {
+				background: #777672;
+			}
+	
+			.position img {
+				position: absolute;
+				width: 50px;
+				margin: 0 10px;
+			}
+	
+			.LA {
+				background-image: url("https://images.unsplash.com/photo-1534253893894-10d024888e49?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+			}
+	
+			.SF {
+				background-image: url('https://images.unsplash.com/photo-1719858403364-83f7442a197e?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+			}
+	
+			.NY {
+				background-image: url('https://images.unsplash.com/photo-1485738422979-f5c462d49f74?q=80&w=1199&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+			}
+	
+			.DC {
+				background-image: url('https://images.unsplash.com/photo-1651707488176-a2b0aeced87d?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+			}
+	
+			#locAccess {
+				border-radius: 20px;
+				height: 50px;
+				background: green;
+			}
+	
+			button:hover {
+				color: white;
+				cursor: pointer;
+			}
+	
+			@media (min-width: 768px) {
+				.content {
+					max-width: 1000px;
+				}
+				.content div {
+					min-height: 600px;
+				}
+			}
+		</style>
+	</head>
+	<body style="background:#0D0D0D; color:#FFFAFA "">
+				<h1>Weather Data with API</h1>
+		<div class="content">
+			<div class="position">
+				<h2 id="message">My Position</h2>
+				<button id="locAccess" onClick="getLocation()">Grant Location Access</button>
+				<img id="loading">
+				<h2 id="city"></h2>
+				<p id="tempHere"></p>
+			</div>
+			<div class="LA">
+				<h2>Los Angeles, CA</h2>
+				<p id="tempLA"></p>
+			</div>
+			<div class="SF">
+				<h2>San Francisco, CA</h2>
+				<p id="tempSF"></p>
+			</div>
+			<div class="NY">
+				<h2>New York, NY</h2>
+				<p id="tempNY"></p>
+			</div>
+			<div class="DC">
+				<h2>Washington, D.C.</h2>
+				<p id="tempDC"></p>
+			</div>
+			
 		</div>
-	</div>
-	<script>
-		const x = document.getElementById("temp");
-		const y = document.getElementById("city");
-		const z = document.getElementById("message");
-		
-		function getLocation() {
-		  if (navigator.geolocation) {
-		    navigator.geolocation.getCurrentPosition(success, error);
-		  } else { 
-		    x.innerHTML = "Geolocation is not supported by this browser.";
-		  }
-		}
-		
-		async function success(position) {
-		  z.innerHTML = "";
-		  let latitude = position.coords.latitude;
-		  let longitude = position.coords.longitude;
+		<script>
+			function getLocation() {
+				document.getElementById("loading").src = "https://media.tenor.com/G7LfW0O5qb8AAAAi/loading-gif.gif";
+				if (navigator.geolocation) {
+					navigator.geolocation.getCurrentPosition(success, error);
+				} else { 
+					x.innerHTML = "Geolocation is not supported by this browser.";
+				}
+			}
 			
-		  const cityURL = "https://nominatim.openstreetmap.org/reverse?lat=" + latitude + "&lon=" + longitude + "&format=json&zoom=10";
-		  const reply = await fetch(cityURL);
-		  const result = await reply.json();
-		  console.log(result);
-		  const place = result.address.city || result.address.town || result.address.village || result.address.county;
-			
-		  const url = "https://api.open-meteo.com/v1/forecast?latitude=" + position.coords.latitude + "&longitude=" + position.coords.longitude + "&hourly=precipitation_probability&current=temperature_2m,precipitation,rain,cloud_cover&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch";
-		  const response = await fetch(url);
-	
-		  const data = await response.json();
-	
-		  console.log(data);
-
-		  y.innerHTML = place + ", " + result.address.state;
-		  x.innerHTML = data.current.temperature_2m + " " + data.current_units.temperature_2m;
-		}
+			async function success(position) {
+				document.getElementById("message").innerHTML = "";
+				document.getElementById("locAccess").style.display = "none";
+				document.getElementById("loading").src = "";
+				let latitude = position.coords.latitude;
+				let longitude = position.coords.longitude;
+					
+				const cityURL = "https://nominatim.openstreetmap.org/reverse?lat=" + latitude + "&lon=" + longitude + "&format=json&zoom=10";
+				const reply = await fetch(cityURL);
+				const result = await reply.json();
+				document.getElementById("city").innerHTML = result.address.town + ", " + result.address.state;
 		
-		function error() {
-		  alert("Unable to locate your position.");
-		}
-
-		getLocation();
-
-	</script>
-</body>
+				getData(latitude, longitude, "tempHere")
+			}
+			
+			function error() {
+			  alert("Unable to locate your position.");
+			}
+	
+			async function getData(latitude, longitude,city) {
+				const url = "https://api.open-meteo.com/v1/forecast?latitude=" + latitude + "&longitude=" + longitude + "&hourly=precipitation_probability&current=temperature_2m,cloud_cover&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch";
+				const response = await fetch(url);
+				const info = await response.json();
+				
+				document.getElementById(city).innerHTML = info.current.temperature_2m + " " + info.current_units.temperature_2m;
+			}
+	
+			function weatherLA() {
+				let latitude = 34.04;
+				let longitude = -118.25;
+	
+				getData(latitude, longitude, "tempLA");
+			}
+	
+			function weatherNY() {
+				let latitude = 40.712776;
+				let longitude = -74.005974;
+	
+				getData(latitude, longitude, "tempNY");
+			}
+	
+			function weatherSF() {
+				let latitude = 37.774929;
+				let longitude = -122.419418;
+	
+				getData(latitude, longitude, "tempSF");
+			}
+	
+			function weatherDC() {
+				let latitude = 38.893452;
+				let longitude = -77.014709;
+	
+				getData(latitude, longitude, "tempDC");
+			}
+	
+			weatherLA();
+			weatherNY();
+			weatherDC();
+			weatherSF();
+	
+		</script>
+	</body>
 </html>
