@@ -111,12 +111,12 @@
 				} else { 
 					x.innerHTML = "Geolocation is not supported by this browser.";
 				}
-				document.getElementById("loading").src = "";
 			}
 			
 			async function success(position) {
 				document.getElementById("message").innerHTML = "";
 				document.getElementById("locAccess").style.display = "none";
+				document.getElementById("loading").src = "";
 				let latitude = position.coords.latitude;
 				let longitude = position.coords.longitude;
 					
@@ -129,7 +129,8 @@
 			}
 			
 			function error() {
-			  alert("Unable to locate your position.");
+				alert("Unable to locate your position.");
+				document.getElementById("loading").src = "";
 			}
 	
 			async function getData(latitude, longitude,city) {
