@@ -2,6 +2,7 @@
 <html lang="en">
 	<head>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="icon" type="image/png" href="https://uxwing.com/wp-content/themes/uxwing/download/weather/weather-icon.png">
 		<title>Weather</title>
 		<style>
 			h1 {
@@ -14,21 +15,18 @@
 			}
 			
 			.content {
-				max-width: 400px;
 				margin: 0 auto;
+				color: black;
 			}
 	
 			.content div {
 				border: white solid 1px;
-				margin: 20px 0px;
-				min-height: 200px;
+				margin: 25px 25px;
+				min-height: 230px;
 				background-size: cover;
 				border-radius: 30px;
 				padding: 0px 20px;
-			}
-	
-			.position {
-				background: #777672;
+				background-color: #edebe7;
 			}
 	
 			.position img {
@@ -57,27 +55,54 @@
 				border-radius: 20px;
 				height: 50px;
 				background: green;
-				color: black;
+				color: white;
+			}
+
+			button {
+				transition: all ease-in-out 0.25s
 			}
 	
 			button:hover {
-				color: white;
 				cursor: pointer;
+				transform: scale(0.9);
+			}
+
+			.search {
+				display: flex;
+				justify-content: center;
+			}
+
+			#searchBar {
+				width: 80%;
+				font-size: 16pt;
+				border-radius: 30px;
+				padding: 10px;
+				background: rgba(255,255,255,0.5);
 			}
 	
 			@media (min-width: 768px) {
 				.content {
-					max-width: 1000px;
+					max-width: 1400px;
+					display: grid;
+					grid-template-columns: repeat(3, 1fr);
+					
 				}
-				.content div {
-					min-height: 600px;
+
+				.main {
+					display: flex;
+				}
+				.position {
+					width: 100%;
 				}
 			}
 		</style>
 	</head>
-	<body style="background:#0D0D0D; color:#FFFAFA "">
-				<h1>Weather Data with API</h1>
-		<div class="content">
+	<body style="background:#87CEEB;">
+		<h1>Weather Data with API</h1>
+		<div class="search">
+			<input type="text" id="searchBar" placeholder="🔍 Look up a city">
+		</div>
+		<div class="main content">
 			<div class="position">
 				<h2 id="message">My Position</h2>
 				<button id="locAccess" onClick="getLocation()">Grant Location Access</button>
@@ -85,6 +110,8 @@
 				<h2 id="city"></h2>
 				<p id="tempHere"></p>
 			</div>
+		</div>
+		<div id="extra" class="content">
 			<div class="LA">
 				<h2>Los Angeles, CA</h2>
 				<p id="tempLA"></p>
@@ -101,9 +128,10 @@
 				<h2>Washington, D.C.</h2>
 				<p id="tempDC"></p>
 			</div>
-			
 		</div>
 		<script>
+			let cities = 0;
+			let tempUnit = "fahrenheit";
 			function getLocation() {
 				document.getElementById("loading").src = "https://media.tenor.com/G7LfW0O5qb8AAAAi/loading-gif.gif";
 				if (navigator.geolocation) {
@@ -131,47 +159,42 @@
 			function error() {
 				alert("Unable to locate your position.");
 			}
-	
-			async function getData(latitude, longitude,city) {
-				const url = "https://api.open-meteo.com/v1/forecast?latitude=" + latitude + "&longitude=" + longitude + "&hourly=precipitation_probability&current=temperature_2m,cloud_cover&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch";
+
+			async function getCityData(city, placeholder) {
+				const url = "https://nominatim.openstreetmap.org/search?q=" + city + "&format=json&limit=1";
+				const response = await fetch(url);
+				const reply = await response.json();
+
+				let latitude = reply[0].lat;
+				let longitude = reply[0].lon;
+				let index = "name" + cities;
+				if (document.getElementById(index)) {
+					document.getElementById(index).innerHTML = reply[0].display_name;
+				}
+				getData(latitude, longitude, placeholder);
+			}
+
+			async function getData(latitude, longitude, placeholder) {
+				const url = "https://api.open-meteo.com/v1/forecast?latitude=" + latitude + "&longitude=" + longitude + "&hourly=precipitation_probability&current=temperature_2m,cloud_cover&wind_speed_unit=mph&temperature_unit=" + tempUnit + "&precipitation_unit=inch";
 				const response = await fetch(url);
 				const info = await response.json();
 				
-				document.getElementById(city).innerHTML = info.current.temperature_2m + " " + info.current_units.temperature_2m;
+				document.getElementById(placeholder).innerHTML = info.current.temperature_2m + " " + info.current_units.temperature_2m;
 			}
-	
-			function weatherLA() {
-				let latitude = 34.04;
-				let longitude = -118.25;
-	
-				getData(latitude, longitude, "tempLA");
-			}
-	
-			function weatherNY() {
-				let latitude = 40.712776;
-				let longitude = -74.005974;
-	
-				getData(latitude, longitude, "tempNY");
-			}
-	
-			function weatherSF() {
-				let latitude = 37.774929;
-				let longitude = -122.419418;
-	
-				getData(latitude, longitude, "tempSF");
-			}
-	
-			function weatherDC() {
-				let latitude = 38.893452;
-				let longitude = -77.014709;
-	
-				getData(latitude, longitude, "tempDC");
-			}
-	
-			weatherLA();
-			weatherNY();
-			weatherDC();
-			weatherSF();
+
+			document.getElementById("searchBar").addEventListener("keydown", function(event) {
+				if (event.key === "Enter") {
+					cities++;
+					document.getElementById("extra").innerHTML = "<div><h2 id='name" + cities + "'></h2><p id='placeholder"+ cities +"'></p></div>" + document.getElementById("extra").innerHTML;
+					getCityData(document.getElementById("searchBar").value, "placeholder" + cities);
+					document.getElementById("searchBar").value = "";
+				}
+			});
+
+			getCityData("New York", "tempNY");
+			getCityData("Los Angeles", "tempLA");
+			getCityData("San Francisco", "tempSF");
+			getCityData("Washington DC", "tempDC");
 	
 		</script>
 	</body>
