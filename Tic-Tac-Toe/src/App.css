@@ -76,10 +76,6 @@ body {
   color: black;
 }
 
-.square:hover {
-  background: #555555;
-}
-
 .winner {
   color: green;
 }
@@ -118,4 +114,10 @@ body {
 
 .game-info {
   margin-left: 20px;
+}
+
+@media (min-width:800px) and (hover:hover) {
+  .square:hover {
+    background: #a0a0a0;
+  }
 }
