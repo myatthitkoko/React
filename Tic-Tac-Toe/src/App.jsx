@@ -40,14 +40,7 @@ function declareWinner(squares) {
   return null;
 }
 
-export default function Board() {
-  const [xIsNext, setXIsNext] = useState(true);
-  const [squares, setSquares] = useState(Array(9).fill(null));
-
-  function defaultBoard() {
-    setSquares(Array(9).fill(null));
-    setXIsNext(true);
-  }
+function Board({ xIsNext, squares, onPlay }) {
 
   function handleClick(i) {
     if (squares[i] || declareWinner(squares)) {
@@ -59,8 +52,7 @@ export default function Board() {
     } else {
       nextSquares[i] = "O";
     }
-    setSquares(nextSquares);
-    setXIsNext(!xIsNext);
+    onPlay(nextSquares);
   }
 
   const result = declareWinner(squares);
@@ -91,9 +83,41 @@ export default function Board() {
         <Square value={squares[7]} onSquareClick={() => handleClick(7)} isWinner={winnerLine.includes(7)}/>
         <Square value={squares[8]} onSquareClick={() => handleClick(8)} isWinner={winnerLine.includes(8)}/>
       </div>
-      <div className="restart">
-        <button onClick={defaultBoard}>RESTART ↻</button>
-      </div>
     </>
+  );
+}
+
+export default function Game() {
+  const [history, setHistory] = useState([Array(9).fill(null)]);
+  const [currentMove, setCurrentMove] = useState(0);
+  const xIsNext = currentMove % 2 === 0;
+  const currentSquares = history[currentMove];
+
+  function handlePlay(nextSquares) {
+    const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
+    setHistory(nextHistory);
+    setCurrentMove(nextHistory.length - 1)
+  }
+
+  function jumpTo(nextMove) {
+    if ((nextMove > 9) || (nextMove < 0) || (nextMove > history.length-1)) {
+      return;
+    }
+    setCurrentMove(nextMove);
+  }
+
+  console.log(history.length)
+
+  return (
+    <div className="game">
+      <div className="game-board">
+        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+      </div>
+      <div className="footer">
+        <button className={currentMove-1 < 0 ? "impossible" : "possible"} onClick={() => jumpTo(currentMove-1)}>{'<'}</button>
+        <button className={history.length <= 1 ? "impossible" : "possible restart"} onClick={() => jumpTo(0)}>RESTART ↻</button>
+        <button className={currentMove+1 > history.length-1  ? "impossible" : "possible"} onClick={() => jumpTo(currentMove+1)}>{'>'}</button>
+      </div>
+    </div>
   );
 }
