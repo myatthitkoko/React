@@ -76,6 +76,10 @@ body {
   color: black;
 }
 
+.square:hover {
+  background: #555555;
+}
+
 .winner {
   color: green;
 }
