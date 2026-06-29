@@ -6,6 +6,12 @@ function App() {
     alert(`Hi, how are you ${name}?`);
   }
 
+  function GreetButton() {
+  return (
+    <button>Click me!</button>
+  );
+}
+
   let name = "Stephen";
 
   return (
@@ -14,6 +20,8 @@ function App() {
       <p>This is my first React statement.</p>
       <p>I can't believe how it refreshes automatically</p>
       <button onClick={() => greet(name)}>My first button!</button>
+      <p>I will be back soon! I can't wait to see you again.</p>
+      <GreetButton />
       <div className="">
         <h1>Weather</h1>
       </div>
