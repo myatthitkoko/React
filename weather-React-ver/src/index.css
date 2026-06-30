@@ -14,9 +14,9 @@
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
+  --cyber: linear-gradient(270deg, #0a1a3f 0%, #00c8ff 100%);
 
   font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
   color-scheme: light dark;
   color: var(--text);
   background: var(--bg);
@@ -34,7 +34,7 @@
   :root {
     --text: #9ca3af;
     --text-h: #f3f4f6;
-    --bg: #16171d;
+    --bg: #1e1e1e;
     --border: #2e303a;
     --code-bg: #1f2028;
     --accent: #c084fc;
@@ -69,13 +69,13 @@ body {
 h1,
 h2 {
   font-family: var(--heading);
-  font-weight: 500;
+  font-weight: 200;
   color: var(--text-h);
 }
 
 h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
+  font-size: 36pt;
+  line-height: 36pt;
   margin: 32px 0;
   @media (max-width: 1024px) {
     font-size: 36px;

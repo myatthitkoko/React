@@ -1,48 +1,88 @@
+import React, { useEffect, useState } from  'react';
 import "./App.css";
 
 function App() {
-  
-  function greet(name) {
-    alert(`Hi, how are you ${name}?`);
+
+  const defaultCities = [
+    "Los Angeles",
+    "San Francisco",
+    "New York",
+    "Portofino",
+    "London",
+    "Paris",
+    "Yangon",
+    "Tokyo",
+    "Seoul"
+  ]
+
+  let tempUnit = "fahrenheit";
+  let status;
+  const [weatherList, setWeatherList] = useState([]);
+
+  async function getCityData(city) {
+    const url = "https://nominatim.openstreetmap.org/search?q=" + city + "&format=json&limit=1";
+    const response = await fetch(url);
+    const reply = await response.json();
+
+    return ({
+      latitude: reply[0].lat,
+      longitude: reply[0].lon
+    });
   }
 
-  function GreetButton() {
-  return (
-    <button>Click me!</button>
-  );
-}
+  async function getWeather(latitude, longitude) {
+    const url = "https://api.open-meteo.com/v1/forecast?latitude=" + latitude + "&longitude=" + longitude + "&hourly=precipitation_probability&current=temperature_2m,cloud_cover&wind_speed_unit=mph&temperature_unit=" + tempUnit + "&precipitation_unit=inch";
+    const response = await fetch(url);
+    const weather = await response.json();
+    console.log(weather);
+    
+    return weather.current.temperature_2m;
+  }
 
-  let name = "Stephen";
+  useEffect(() => {
+    async function loadCities() {
+      const results = [];
+
+      for (const city of defaultCities) {
+        const coords = await getCityData(city);
+        const temp = await getWeather(coords.latitude, coords.longitude);
+
+        if (temp >= 80) {
+          status = "🔥";
+        } else if (temp >= 70) {
+          status = "⛅";
+        } else if (temp >= 60) {
+          status = "☀️";
+        } else {
+          status = "❄️";
+        }
+        
+        results.push ({
+          city,
+          coords,
+          temp,
+          status
+        });
+      }
+
+      setWeatherList(results);
+    }
+
+    loadCities();
+  }, []);
 
   return (
     <>
-      <h1>Hello {name}</h1>
-      <p>This is my first React statement.</p>
-      <p>I can't believe how it refreshes automatically</p>
-      <button onClick={() => greet(name)}>My first button!</button>
-      <p>I will be back soon! I can't wait to see you again.</p>
-      <GreetButton />
-      <div className="">
-        <h1>Weather</h1>
-      </div>
-      <div id="extra" className="content">
-        <div className="LA">
-          <h2>Los Angeles, CA</h2>
-          <p id="tempLA"></p>
-        </div>
-        <div className="SF">
-          <h2>San Francisco, CA</h2>
-          <p id="tempSF"></p>
-        </div>
-        <div className="NY">
-          <h2>New York, NY</h2>
-          <p id="tempNY"></p>
-        </div>
-        <div className="DC">
-          <h2>Washington, D.C.</h2>
-          <p id="tempDC"></p>
-        </div>
-		  </div>
+      <h1>Weather List <span className="small">Powered with</span>API and React</h1>
+      {weatherList.map((item, index) => (
+        <React.Fragment key={index}>
+          <div className="city" key={index}>
+            <h3>{item.city}</h3>
+            <p>{item.temp} {item.status}</p>
+          </div>
+          <hr></hr>
+        </React.Fragment>
+      ))}
     </>
   )
 }
