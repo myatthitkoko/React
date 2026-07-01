@@ -176,7 +176,7 @@ abbr[title] {
 
 .react-calendar__tile--now {
   background: black;
-  color: white;
+  color: white !important;
 }
 
 .react-calendar__tile--now:enabled:hover,
