@@ -15,7 +15,7 @@ export default function App() {
         <Calendar 
           tileContent={({ date, view}) =>
           view === "month" && date.toISOString().split("T")[0] === "2026-07-10" ? (
-            <div style={{ color: "red", position: "absolute", margin: "40px 0px 0px 0px"}}><img src="/heart.svg" style={{width: 70, height: 70}}/></div>
+            <div style={{position: "absolute", margin: "40px 0px 0px 0px"}}><img src="/heart.svg" style={{width: 70, height: 70}}/></div>
           ): null}
           calendarType="gregory"
           onChange={setDate} 
