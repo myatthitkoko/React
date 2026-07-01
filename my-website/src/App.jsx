@@ -1,5 +1,8 @@
 import { useState } from 'react'
+
 import './App.css'
+
+import { Routes, Route } from "react-router-dom";
 
 import Header from "./header";
 
@@ -11,7 +14,10 @@ export default function App() {
   return (
     <>
       <Header />
-      <Projects />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/projects" element={<Projects />} />
+      </Routes>
     </>
   )
 }
