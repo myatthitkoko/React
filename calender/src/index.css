@@ -1,0 +1,10 @@
+@media (max-width: 800px) and (hover:none) {
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+}
