@@ -1,0 +1,415 @@
+:root {
+  /* three main colors */
+  --showgirlGreen: rgb(44,91,43);
+  --showgirlOrange: #e15921;
+  --opalite: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+
+  /* unused old colors */
+  --showgirlGreenF: rgba(44,91,43, 0.80);
+  --deepGreen: #234822;
+  --showgirlBrick: linear-gradient(135deg, rgba(225, 89, 33, 0.80), rgba(215, 63, 0, 0.80), rgba(233, 139, 91, 0.80), rgba(141, 211, 198, 0.80));
+  --orangeGradient: linear-gradient(to right, #e15921, #FF9966, #ffe566 100%);
+  --trueshowgirl: linear-gradient(135deg, #8dd3c6 0%, #3f816c 100%);
+  --showgirlBrickNav: linear-gradient(to right, rgba(225, 89, 33, 0.80), rgba(215, 63, 0, 0.80), rgba(233, 139, 91, 0.80), rgba(141, 211, 198, 0.80));
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.1);      
+  backdrop-filter: blur(3px);                
+  -webkit-backdrop-filter: blur(3px);                               
+  border: 1px solid rgba(255, 255, 255, 0.2); 
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 50px;  
+}
+
+.accent {
+  font-weight: bold;
+  animation: accentAnimate 4s ease-in-out infinite;
+}
+
+@keyframes accentAnimate {
+  0% {color: var(--showgirlGreen);}
+  50% {color: var(--showgirlOrange);}
+  100% {color: var(--showgirlGreen);}
+}
+
+.centered {
+  text-align: center;
+}
+
+.justified {
+  text-align: justify;
+}
+
+/*-------------------font sizes-----------------------*/
+
+h1, h2, h3, h4 {
+  font-family:"italiana", sans-serif;
+}
+
+h1 {
+  font-size: 20pt;
+}
+
+h2 {
+  font-size: 18pt;
+}
+
+h3 {
+  font-size: 16pt;
+}
+
+h4 {
+  font-size: 14pt;
+}
+
+p {
+  font-family:"Roboto Condensed", sans-serif;
+  font-size: 11pt;
+}
+
+.content {
+  margin-left: 24px;
+  margin-right: 24px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  height: 50pt;
+  width: 100%;
+  margin: 0px;
+  background: rgba(255, 255, 255, 0.1);      
+  backdrop-filter: blur(5px);                
+  -webkit-backdrop-filter: blur(3px);                               
+  border: 1px solid rgba(255, 255, 255, 0.3); 
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  position: absolute;
+}
+
+@media (min-width: 768px) and (hover:hover) {
+h1 {
+  font-size: 30pt;
+}
+
+h2 {
+  font-size: 25pt;
+}
+
+h3 {
+  font-size: 20pt;
+}
+
+h4 {
+  font-size: 16pt;
+}
+
+p {
+  font-size: 14pt;
+}
+
+.content {
+  margin-left: 60px;
+  margin-right: 60px;
+}
+
+.enlarge {
+  transition: transform 0.7s ease, box-shadow 0.7s ease;
+}
+
+.enlarge:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
+
+header {
+  width: 97%;
+  margin: 15px 0px;
+  border-radius: 50px;
+}
+
+}
+
+
+/* ---------------------Header----------------------- */
+
+.header-wrapper {
+  position: sticky;
+  top: 0%;
+  display: flex;
+  justify-content: center;
+  z-index: 999;
+}
+
+.logo {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  font-family: "italiana", system-ui;
+  font-weight: bold;
+  font-size: 24pt;
+  margin: 0;
+  position: absolute;
+  z-index: 1;
+  text-decoration: none;
+  color: black;
+}
+
+/*scroll bar for centering*/
+
+html {
+  scrollbar-gutter: stable;
+  scroll-behavior: smooth;
+  overflow-y: scroll; 
+}
+
+.nav-toggle {
+  display: none;
+}
+
+nav {
+  position: absolute;
+  text-align: left;
+  top: 100%;
+  left: 0;
+  height: 160pt;
+  transform: scale(1, 0);
+  transform-origin: top;
+  transition: transform 0.5s ease-in-out;
+}
+
+@keyframes drop-down {
+  0% {transform: translateY(-10px);}
+  100% {transform: translateY(0);}
+}
+
+nav ul,
+.nullifyList {
+  margin: 30px 0px;
+  padding: 0;
+  list-style: none;
+}
+
+nav li {
+  margin: 30px 0px;
+  font-size: 15pt;
+  font-family:"Roboto Condensed", sans-serif;
+}
+
+nav a {
+  color: var(--showgirlGreen);
+  background: var(--opalite);   
+  padding: 10px;
+  border-radius: 30px;
+  margin: 30px 10px;
+  font-size: 0.9em;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: bold;
+  border: solid white 1px;
+}
+
+nav a:hover {
+  color: var(--showgirlOrange);
+}
+
+nav:hover {
+  transform: scale(1,1);
+}
+
+.nav-toggle:hover ~ nav {
+  transform: scale(1,1);
+}
+
+.nav-toggle:checked ~ nav {
+  transform: scale(1,1);
+}
+
+.nav-toggle:checked ~ .nav-toggle-label {
+  color: var(--showgirlOrange);
+}
+
+.nav-toggle-label {
+  border: 100%;
+  display: flex;
+  font-size: 24pt;
+  padding: 10px 20px 14px 20px;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+}
+
+@media (max-width: 800px) or (hover: none) {
+
+.nav-toggle:not(:checked) ~ nav {
+  transform: scale(1,0);
+}
+
+.nav-toggle:checked ~ nav {
+  transform: scale(1,1);
+}
+
+.nav-toggle:checked ~ .nav-toggle-label {
+  color: var(--showgirlGreen);
+}
+
+nav a {
+  background: none;
+  border: none;
+  margin: 0;
+  color: black;
+}
+
+nav li {
+  margin: 15px;
+}
+
+nav ul {
+  margin: 0px;
+}
+
+nav {
+  background: var(--showgirlBrickNav);
+  width: 100%;
+}
+
+header {
+  background: var(--showgirlBrickNav);
+}
+
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+}
+
+/*---------------Footer--------------*/
+
+.Footer {
+  min-height: 100pt;
+  background-color: #555555;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: gray;
+}
+
+.Footer hr {
+  max-width: 88%;
+  background: gray;
+}
+
+.footNote {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+.contactLinks {
+  margin-left: 15pt;
+  margin-right: 15pt;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.socials {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.socials img {
+  max-width: 40px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.socials img:hover {
+  background-color: white;
+  transform: scale(1.1);
+  transition: transform 0.5s ease
+}
+
+.shine {
+  overflow: hidden;
+}
+
+.shine::before {
+  content: "";
+  position: absolute;
+  width: 300px;
+  height: 100%;
+  left: -300px;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.7), transparent);
+  transform: skewX(-20deg);
+}
+
+
+@media (hover:hover) {
+
+.shine:hover::before {
+  animation: light 0.5s ease-in-out;
+}
+@keyframes light {
+  0% {
+    left: -10%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+}
+@media (hover:none) {
+.shine::before {
+  animation: light 5s ease-in-out 3s infinite;
+}
+
+@keyframes light {
+  0% {
+    left: -10%;
+  }
+  10% {
+    left: 100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+}
+
+.jump h4 {
+  overflow: hidden;
+}
+
+.jump a::before {
+  content: '';
+  display: block;
+  height: 5px;
+  background-color: var(--showgirlGreen);
+  position: absolute;
+  top: 0px;
+  width: 0%;
+  transition: all ease-in-out 0.25s;
+}
+
+.jump a {
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+  color: white;
+  padding-top: 15pt;
+  padding-bottom: 15pt;
+}
+
+.jump a:hover::before {
+  width: 100%;
+}
+
+.jump a:hover {
+  color: var(--showgirlGreen);
+}
