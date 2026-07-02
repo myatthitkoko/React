@@ -121,11 +121,6 @@
   padding: 0px 30px;
 }
 
-.socials img {
-  width: 50px;
-  height: 50px;
-}
-
 .glass {
   align-content: center;
 }
@@ -212,18 +207,6 @@
 
 .logo {
   position: relative;
-}
-
-.jump {
-  display: flex;
-  flex-direction: row;
-  margin:0; 
-  width: 80%; 
-  padding-right: 20px; 
-  color: var(--showgirlGreen);
-  position: relative;
-  justify-content: space-between;
-  list-style: none;
 }
 
 .slideshow img {

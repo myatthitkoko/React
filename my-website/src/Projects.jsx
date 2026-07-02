@@ -202,15 +202,15 @@ export default function Projects() {
   return (
       <>
         <div className={styles.content}>
-          <h2 id="recent">Recent Projects</h2>
+          <h2 id="Recent">Recent Projects</h2>
           <section className={styles.cards}>
             <ProjectGrid featured={false} />
           </section>
-          <h2 id="featured">Featured Projects</h2>
+          <h2 id="Featured">Featured Projects</h2>
           <section className={styles.cards}>
             <ProjectGrid featured={true} />
           </section>
-          <section id="labs" className="glass">
+          <section id="Labs" className="glass">
             <h3 style={{ marginLeft: 50 }}>Remarkable Physics labs</h3>
             <LabGrid />
           </section>

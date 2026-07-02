@@ -12,12 +12,12 @@ export default function Home() {
                         </div>
                         <div className={styles.buttons}>
                             <div className={`${styles.glass2} shine`}>
-                                <a href="/contact/">
+                                <a href="/contact">
                                     <button>Contact</button>
                                 </a>
                             </div>
                             <div className={`${styles.glass3} shine`}>
-                                <a href="/projects/">
+                                <a href="/projects">
                                     <button>View Projects</button>
                                 </a>
                             </div>

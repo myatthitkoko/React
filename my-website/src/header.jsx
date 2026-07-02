@@ -1,6 +1,33 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
-export default function Header() {
+const pageJumps = [
+    {
+        page: "projects",
+        jumps: ["Featured", "Blog", "Labs"]
+    },
+    {
+        page: "",
+        jumps: ["Books", "About", "Projects", "Contact"]
+    }
+]
+
+function JumpSection() {
+    const location = useLocation();
+    const currentPage = location.pathname;
+    const JumpsForPage = pageJumps.find(
+        PageObj => "/" + PageObj.page === currentPage
+    )
+
+    return(
+        <>
+            {JumpsForPage?.jumps.map((sections, j) => (
+                <h4><a href={"#" + sections} key={j}>{sections}</a></h4>
+            ))}
+        </>
+    ) 
+}
+
+function HeaderContent() {
     return (
         <>
             <div className="header-wrapper">
@@ -33,19 +60,19 @@ export default function Header() {
                 <a href="/" className="logo">
                     <h1>Myat Thit Ko Ko</h1>
                 </a>
-                {/*<div className="jump">
-                    <h4>
-                    <a href="#featured">Featured Projects</a>
-                    </h4>
-                    <h4>
-                    <a href="#blogs">Blogs</a>
-                    </h4>
-                    <h4>
-                    <a href="#labs">Labs</a>
-                    </h4>
-                </div>*/}
+                <div className="jump">
+                    <JumpSection />
+                </div>
                 </header>
             </div>
+        </>
+    )
+}
+
+export default function Header() {
+    return (
+        <>
+            <HeaderContent />
         </>
     )
 }

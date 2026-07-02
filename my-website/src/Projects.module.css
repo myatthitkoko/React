@@ -150,18 +150,6 @@ figcaption {
   position: relative;
 }
 
-.jump {
-  display: flex;
-  flex-direction: row;
-  margin:0; 
-  width: 80%; 
-  padding-right: 20px; 
-  color: var(--showgirlGreen);
-  position: relative;
-  justify-content: space-between;
-  list-style: none;
-}
-
 .jump a {
   color: var(--showgirlOrange);
 }

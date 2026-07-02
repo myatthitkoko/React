@@ -150,7 +150,6 @@ header {
   font-weight: bold;
   font-size: 24pt;
   margin: 0;
-  position: absolute;
   z-index: 1;
   text-decoration: none;
   color: black;
@@ -278,6 +277,11 @@ header {
   background: var(--showgirlBrickNav);
 }
 
+.jump {
+  position: absolute;
+  display: none;
+}
+
 }
 
 body {
@@ -401,7 +405,7 @@ body {
   position: relative;
   display: inline-block;
   text-decoration: none;
-  color: white;
+  color: var(--showgirlOrange);
   padding-top: 15pt;
   padding-bottom: 15pt;
 }
@@ -412,4 +416,15 @@ body {
 
 .jump a:hover {
   color: var(--showgirlGreen);
+}
+
+.jump {
+  display: flex;
+  flex-direction: row;
+  margin:0; 
+  width: 80%; 
+  padding-right: 20px; 
+  position: relative;
+  justify-content: space-between;
+  list-style: none;
 }
