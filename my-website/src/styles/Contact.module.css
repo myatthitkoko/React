@@ -1,0 +1,247 @@
+/* Basic font styles */
+
+.text {
+  color: var(--deepGreen);
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.content {
+  margin: 0 auto;
+  max-width: 400px;
+}
+
+.checks {
+  margin-left: -10px;
+  margin-right: -10px;
+  padding: 30px 5px;
+}
+
+input[type="checkbox"] {
+  margin-top: 10px;
+}
+
+.credentials {
+  padding: 30px;
+  padding-bottom: 10px;
+}
+
+.Banner {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.Banner img {
+  max-width: 100%;
+  display: block;
+  margin-bottom: 40px;
+}
+
+.circle {
+  position: absolute;
+  bottom: -150px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+}
+
+.circle h2 {
+  color: white;
+  text-align: center;
+  font-size: 24pt;
+  margin-top: 20px;
+}
+
+.jump {
+  display: none;
+}
+
+@media (min-width: 768px) {
+
+.content {
+  max-width: 1000px;
+  font-size: 14pt;
+}
+
+.circle {
+  bottom: -800px;
+  width: 1000px;
+  height: 1000px;
+}
+
+.circle h2 {
+  font-size: 40pt;
+  margin-top: 80px;
+}
+
+.checks {
+  padding: 30px;
+}
+
+input[type="checkbox"] {
+  margin-top: 20px;
+}
+  
+.text {
+  padding-left: 75px;
+  padding-right: 75px;
+}
+
+.logo {
+  position: relative;
+}
+
+.jump {
+  display: flex;
+  flex-direction: row;
+  margin:0; 
+  width: 80%; 
+  padding-right: 20px; 
+  position: relative;
+  justify-content: space-between;
+  list-style: none;
+}
+
+.jump a:hover {
+  color: var(--showgirlOrange);
+}
+
+.jump a::before {
+  background-color: var(--showgirlOrange);
+}
+
+}
+
+legend,
+label {
+    font-family: "roboto condensed", san-serif;
+}
+
+.title2 {
+  font-size: 1.6rem;
+  display: flex;
+  color: var(--showgirlOrange);
+  justify-content: center;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Form structure */
+
+form {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+fieldset {
+  border: 0;
+  padding: 0;
+}
+
+legend {
+  display: flex;
+  flex-direction: flex-end;
+  padding-bottom: 10px;
+  font-weight: bold;
+}
+
+fieldset,
+.separator {
+  margin-bottom: 20px;
+}
+
+.form-section {
+  margin-bottom: 20px;
+  padding: 20px;
+}
+
+.divide {
+  max-width: 100%;
+  max-height: 50px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Individual form items */
+
+fieldset input {
+  margin: 0 10px 0 0;
+}
+
+label {
+  margin-right: 10px;
+}
+
+@media (min-width: 768px) {
+
+label {
+  margin-right: 40px;
+}
+
+}
+
+.container label {
+  margin-right: 0px;
+}
+
+
+textarea {
+  margin-top: 10px;
+  padding: 5px;
+  width: 100%;
+  height: 200px;
+}
+
+.separator {
+  display: flex;
+}
+
+.separator label {
+  flex: 2;
+}
+
+.separator input,
+.separator select {
+  flex: 3;
+  padding: 5px;
+}
+
+.button {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 1px solid grey;
+  background-color: #dddddd;
+  width: 50%;
+  margin: 0 auto;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  display: block;
+}
+
+.form-selection button {
+  background: var(--orangeGradient);
+  border: var(--showgirlOrange) solid 1px;
+  font-size: 16px;
+  color: #eeeeee;
+  transition: transform 0.5s ease;
+}
+
+.button:hover {
+  color: black;
+  cursor: pointer;
+  border: none;
+  text-decoration: underline;
+  transform: scale(0.95);
+}
+
+input,
+select,
+textarea {
+  font-size: 16px;
+}

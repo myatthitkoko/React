@@ -8,6 +8,10 @@ const pageJumps = [
     {
         page: "",
         jumps: ["Books", "About", "Projects", "Contact"]
+    },
+    {
+        page: "contact",
+        jumps: ["Email", "Socials", "Feedback"]
     }
 ]
 
@@ -21,14 +25,19 @@ function JumpSection() {
     return(
         <>
             {JumpsForPage?.jumps.map((sections, j) => (
-                <h4><a href={"#" + sections} key={j}>{sections}</a></h4>
+                <h4 key={j}><a href={"#" + sections}>{sections}</a></h4>
             ))}
         </>
     ) 
 }
 
 function HeaderContent() {
-    return (
+    const location = useLocation();
+    const currentPage = location.pathname;
+    const sanityCheck = pageJumps.find(
+        PageObj => "/" + PageObj.page === currentPage
+    )
+    return sanityCheck ? (
         <>
             <div className="header-wrapper">
                 <header>
@@ -66,7 +75,7 @@ function HeaderContent() {
                 </header>
             </div>
         </>
-    )
+    ) : null;
 }
 
 export default function Header() {
@@ -74,5 +83,5 @@ export default function Header() {
         <>
             <HeaderContent />
         </>
-    )
+    );
 }

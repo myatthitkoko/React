@@ -13,6 +13,17 @@
   --showgirlBrickNav: linear-gradient(to right, rgba(225, 89, 33, 0.80), rgba(215, 63, 0, 0.80), rgba(233, 139, 91, 0.80), rgba(141, 211, 198, 0.80));
 }
 
+#Featured, 
+#Labs, 
+#Blogs {
+  scroll-margin-top: 60pt;
+}
+
+#Socials, 
+#Feedback {
+  scroll-margin-top: 50pt;
+}
+
 .glass {
   background: rgba(255, 255, 255, 0.1);      
   backdrop-filter: blur(3px);                
