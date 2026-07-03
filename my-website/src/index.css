@@ -140,6 +140,49 @@ header {
   border-radius: 50px;
 }
 
+.jump h4 {
+  overflow: hidden;
+}
+
+.jump a::before {
+  content: '';
+  display: block;
+  height: 5px;
+  background-color: var(--showgirlGreen);
+  position: absolute;
+  top: 0px;
+  width: 0%;
+  transition: all ease-in-out 0.25s;
+}
+
+.jump a {
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+  color: var(--showgirlOrange);
+  padding-top: 15pt;
+  padding-bottom: 15pt;
+}
+
+.jump a:hover::before {
+  width: 100%;
+}
+
+.jump a:hover {
+  color: var(--showgirlGreen);
+}
+
+.jump {
+  display: flex;
+  flex-direction: row;
+  margin:0; 
+  width: 80%; 
+  padding-right: 20px; 
+  position: relative;
+  justify-content: space-between;
+  list-style: none;
+}
+
 }
 
 
@@ -293,6 +336,10 @@ header {
   display: none;
 }
 
+.logo {
+  position: absolute;
+}
+
 }
 
 body {
@@ -395,47 +442,4 @@ body {
   }
 }
 
-}
-
-.jump h4 {
-  overflow: hidden;
-}
-
-.jump a::before {
-  content: '';
-  display: block;
-  height: 5px;
-  background-color: var(--showgirlGreen);
-  position: absolute;
-  top: 0px;
-  width: 0%;
-  transition: all ease-in-out 0.25s;
-}
-
-.jump a {
-  position: relative;
-  display: inline-block;
-  text-decoration: none;
-  color: var(--showgirlOrange);
-  padding-top: 15pt;
-  padding-bottom: 15pt;
-}
-
-.jump a:hover::before {
-  width: 100%;
-}
-
-.jump a:hover {
-  color: var(--showgirlGreen);
-}
-
-.jump {
-  display: flex;
-  flex-direction: row;
-  margin:0; 
-  width: 80%; 
-  padding-right: 20px; 
-  position: relative;
-  justify-content: space-between;
-  list-style: none;
 }

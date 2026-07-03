@@ -117,7 +117,7 @@ input[type="checkbox"] {
 }
 
 legend,
-label {
+.label {
     font-family: "roboto condensed", san-serif;
 }
 
@@ -174,19 +174,19 @@ fieldset input {
   margin: 0 10px 0 0;
 }
 
-label {
+.label {
   margin-right: 10px;
 }
 
 @media (min-width: 768px) {
 
-label {
+.label {
   margin-right: 40px;
 }
 
 }
 
-.container label {
+.container .label {
   margin-right: 0px;
 }
 
@@ -200,9 +200,10 @@ textarea {
 
 .separator {
   display: flex;
+  flex-direction: column;
 }
 
-.separator label {
+.separator .label {
   flex: 2;
 }
 
@@ -224,7 +225,13 @@ textarea {
   display: block;
 }
 
-.form-selection button {
+.warning {
+  color: red;
+  margin: 0;
+  padding: 0;
+}
+
+.button {
   background: var(--orangeGradient);
   border: var(--showgirlOrange) solid 1px;
   font-size: 16px;
@@ -244,4 +251,17 @@ input,
 select,
 textarea {
   font-size: 16px;
+}
+
+:disabled {
+  background: lightgrey;
+  border: grey;
+  color: grey;
+}
+
+.button:disabled:hover {
+  transform: none;
+  text-decoration: none;
+  cursor: not-allowed;
+  color: grey;
 }

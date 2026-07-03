@@ -25,7 +25,7 @@ function JumpSection() {
     return(
         <>
             {JumpsForPage?.jumps.map((sections, j) => (
-                <h4 key={j}><a href={"#" + sections}>{sections}</a></h4>
+                <h4 key={sections}><a href={"#" + sections}>{sections}</a></h4>
             ))}
         </>
     ) 

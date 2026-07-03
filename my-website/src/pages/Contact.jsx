@@ -1,10 +1,16 @@
 import { useState } from "react";
+import { useRef } from "react";
 import styles from "../styles/Contact.module.css"
+import InputEmail from "../components/contact/InputEmail.jsx"
+import InputPhone from "../components/contact/InputPhone.jsx";
 
 export default function Contact() {
     const [name,setName] = useState("");
     const [email,setEmail] = useState("");
-    const [phone,setPhone] = useState("");
+    const [phone, setPhone] = useState("");
+    const textRef = useRef(null);
+    const [emailWarning, setEmailWarning] = useState("");
+    const [phoneWarning, setPhoneWarning] = useState("");
     return (
         <>
             <div className={styles.Banner}>
@@ -25,26 +31,46 @@ export default function Contact() {
                                     onChange={(e)=>setName(e.target.value)}
                                     placeholder="Name"
                                     type="text"
+                                    maxLength={70}
+                                    className="glass"
+                                    required
                                 />
                             </div>
                             <div className={styles.separator}>
-                                <input 
-                                    value={email}
-                                    onChange={(f)=>setEmail(f.target.value)}
-                                    placeholder="Email"
-                                    type="email"
+                                <InputEmail
+                                    email={email}
+                                    setEmail={setEmail}
+                                    emailWarning={emailWarning}
+                                    setEmailWarning={setEmailWarning}
                                 />
                             </div>
                             <div className={styles.separator}>
-                                <input 
-                                    value={phone}
-                                    onChange={(g)=>setPhone(g.target.value)}
-                                    placeholder="Phone"
-                                    type="tel"
+                                <InputPhone
+                                    phone={phone}
+                                    setPhone={setPhone}
+                                    phoneWarning={phoneWarning}
+                                    setPhoneWarning={setPhoneWarning}
                                 />
                             </div>
                         </div>
+                        <textarea
+                            ref={textRef}
+                            className="glass"
+                            rows={5}
+                            cols={33}
+                            placeholder="Leave a comment!"
+                            style={{ padding: 30 }}
+                            defaultValue={""}
+                        />
                     </div>
+                    <button 
+                        type="button"
+                        onClick={() => alert(name + "\n" + email + "\n" + phone + "\n" + textRef.current.value)}
+                        className={styles.button}
+                        disabled={emailWarning !== "" || phoneWarning !== ""}
+                    >
+                        Submit
+                    </button>
                 </form>
             </div>
         </>
