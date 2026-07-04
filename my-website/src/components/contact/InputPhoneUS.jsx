@@ -1,15 +1,34 @@
 import styles from "../../styles/Contact.module.css"
-import Vanity from "../../utilities/InputPhoneVanity"
-
-function handleAlphabets(value, setPhone) {
-    return setPhone(Vanity(value));
-}
 
 function validateFullPhone(phone) {
     const patternRegex = /^\+?[0-9\s\-\(\)]{7,16}$/
     if (!patternRegex.test(phone)) return "Phone is in illegal format";
 
     return ""
+}
+
+function handleChange(g, setPhone) {
+    //assuming US phone number
+    const rawInput = g.target.value.replace(/\D/g, '');
+    let formatted = "";
+
+    const inputType = g.nativeEvent.inputType;
+
+    if (inputType === "deleteContentBackward") {
+        setPhone(g.target.value);
+        return;
+    }
+
+    if (rawInput.length > 0) {
+      formatted = `(${rawInput.slice(0, 3)}`;
+    }
+    if (rawInput.length >= 3) {
+      formatted += `) ${rawInput.slice(3, 6)}`;
+    }
+    if (rawInput.length >= 6) {
+      formatted += `-${rawInput.slice(6, 10)}`; 
+    }
+    setPhone(formatted);
 }
 
 export default function InputPhone({
@@ -22,14 +41,16 @@ export default function InputPhone({
     return (
         <>
             {phoneWarning &&  <p className={styles.warning}>{phoneWarning}</p>}
+            <span className={styles.phPrefix}>+1</span>
             <input 
-                className="glass"
+                className={`glass ${styles.phInput}`}
                 value={phone}
                 onChange={(g)=>{
-                    setPhone(Vanity(g.target.value));
+                    handleChange(g, setPhone);
                 }}
                 placeholder="Phone"
                 type="tel"
+                required
                 onBlur={(g)=>{
                     if (g.target.value.trim() === "") {
                         setPhoneWarning("");

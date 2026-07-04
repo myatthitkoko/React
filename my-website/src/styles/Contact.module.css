@@ -8,7 +8,7 @@
 
 .content {
   margin: 0 auto;
-  max-width: 400px;
+  max-width: 350px;
 }
 
 .checks {
@@ -63,7 +63,7 @@ input[type="checkbox"] {
 @media (min-width: 768px) {
 
 .content {
-  max-width: 1000px;
+  max-width: 1200px;
   font-size: 14pt;
 }
 
@@ -264,4 +264,35 @@ textarea {
   text-decoration: none;
   cursor: not-allowed;
   color: grey;
+}
+
+.phPrefix {
+  z-index: 100;
+  position: absolute;
+  height: 50px;
+  width: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 30px;
+}
+
+.phInput {
+  padding-left: 30px !important;
+}
+
+.bigRectangle {
+  width: 100%;
+  font-size: 16pt;
+  background: rgba(88,231,88,0.3);
+  border-radius: 30px;
+  padding: 30px;
+}
+
+.receivedData {
+  background: white;
+  color: black;
+  border:grey solid 1px;
+  padding: 20px;
+  margin: 0px;
 }

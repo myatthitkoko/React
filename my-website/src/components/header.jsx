@@ -7,7 +7,7 @@ const pageJumps = [
     },
     {
         page: "",
-        jumps: ["Books", "About", "Projects", "Contact"]
+        jumps: ["Home", "Projects", "Contact"]
     },
     {
         page: "contact",
@@ -49,13 +49,7 @@ function HeaderContent() {
                         <Link to="/">Home</Link>
                         </li>
                         <li>
-                        <Link to="/books">Books</Link>
-                        </li>
-                        <li>
                         <Link to="/projects">Projects</Link>
-                        </li>
-                        <li>
-                        <Link to="/about">About</Link>
                         </li>
                         <li>
                         <Link to="/contact">Contact</Link>
