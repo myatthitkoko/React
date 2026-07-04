@@ -60,9 +60,9 @@ function HeaderContent() {
                     <span>☰</span>
                     </label>
                 </div>
-                <a href="/" className="logo">
+                <Link to="/" className="logo">
                     <h1>Myat Thit Ko Ko</h1>
-                </a>
+                </Link>
                 <div className="jump">
                     <JumpSection />
                 </div>
