@@ -14,12 +14,12 @@ export default function Home() {
                             <div className={`${styles.glass2} shine`}>
                                 <Link to="/contact">
                                     <button>Contact</button>
-                                </a>
+                                </Link>
                             </div>
                             <div className={`${styles.glass3} shine`}>
                                 <Link to="/projects">
                                     <button>View Projects</button>
-                                </a>
+                                </Link>
                             </div>
                             <hr className={styles.line} />
                         </div>
