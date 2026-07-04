@@ -396,6 +396,7 @@ body {
 }
 
 .shine {
+  position: relative;
   overflow: hidden;
 }
 
