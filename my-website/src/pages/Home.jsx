@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styles from "../styles/Home.module.css"
 
 export default function Home() {
