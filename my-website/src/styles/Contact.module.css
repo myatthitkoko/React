@@ -7,7 +7,7 @@
 }
 
 .content {
-  margin: 0 auto;
+  margin: 50px auto;
   max-width: 350px;
 }
 
@@ -63,7 +63,7 @@ input[type="checkbox"] {
 @media (min-width: 768px) {
 
 .content {
-  max-width: 1200px;
+  max-width: 1000px;
   font-size: 14pt;
 }
 
@@ -295,4 +295,17 @@ textarea {
   border:grey solid 1px;
   padding: 20px;
   margin: 0px;
+}
+
+.comment {
+  position: relative;
+}
+
+.comment p {
+  text-align: right;
+  position: absolute;
+  z-index: 1;
+  bottom: 10px;
+  right: 30px;
+  color: grey;
 }

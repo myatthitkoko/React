@@ -34,15 +34,19 @@ export default function FormBefore() {
                             />
                         </div>
                     </div>
-                    <textarea
-                        value={text.value}
-                        onChange={(a)=>text.setValue(a.target.value)}
-                        className="glass"
-                        rows={5}
-                        cols={33}
-                        placeholder="Leave a comment!"
-                        style={{ padding: 30 }}
-                    />
+                    <div className={styles.comment}>
+                        <textarea
+                            value={text.value}
+                            onChange={(a)=>text.setValue(a.target.value)}
+                            className="glass"
+                            rows={5}
+                            cols={33}
+                            placeholder="Leave a comment!"
+                            style={{ padding: 30 }}
+                            maxLength={2048}
+                        />
+                        <p>{`${text.value.length}/2048`}</p>
+                    </div>
                 </div>
                 <button 
                     type="submit"

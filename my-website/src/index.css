@@ -444,3 +444,17 @@ body {
 }
 
 }
+
+.NotFound {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  border: red solid 1
+}
+
+.blueLink {
+  color: blue;
+  text-decoration: underline;
+}
