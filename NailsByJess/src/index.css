@@ -1,0 +1,63 @@
+:root {
+  --color1: rgb(255, 148, 219);
+  --color2: #800020;
+}
+
+h1 {
+  color: var(--color2);
+  text-align: center;
+  margin: 0;
+}
+
+.smaller {
+  display: block;
+  color: grey;
+  font-size: 14pt;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  padding: 10px;
+  z-index: 1000;
+}
+
+h3 {
+  color: var(--color2);
+  font-size: 18pt;
+  text-align: center;
+}
+
+.secondary {
+  background: none;
+  color: var(--color2);
+  border: var(--color2) solid 1px;
+}
+
+.primary {
+  background: var(--color2);
+  color: white;
+}
+
+.NotFound {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.blueLink {
+  color: blue;
+  text-decoration: underline;
+}
+
+a {
+  text-decoration: none;
+}
