@@ -138,14 +138,24 @@ textarea {
     }
 
     .form {
-        max-width: 1000px;
+        max-width: 1200px;
+        flex-direction: row;
+        gap: 30px;
+    }
+
+    .form p {
+        max-width: 550px;
     }
 
     .formWrapper {
         width: 100%;
     }
 
+    .comment {
+        max-width: 550px;
+    }
+
     .separator input {
-        min-width: 800px;
+        min-width: 550px;
     }
 }

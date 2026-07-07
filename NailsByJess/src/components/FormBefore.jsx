@@ -7,7 +7,7 @@ export default function FormBefore() {
     const { name, text, email, phone } = useForm();
 
     return (
-        <>
+        <div>
             <div className={styles.formSection}>
                 <h2 className={styles.title2}>Contact Info</h2>
                 <div className={`glass ${styles.formSection} ${styles.credentials}`}>
@@ -55,6 +55,6 @@ export default function FormBefore() {
             >
                 Make a Deposit
             </button>
-        </>
+        </div>
     )
 }

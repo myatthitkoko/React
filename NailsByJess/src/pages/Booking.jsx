@@ -29,8 +29,10 @@ function CalendarSection() {
                         <div className={styles.message}>
                             <h2>You are making an appointment for {date.toDateString()} at {slot}</h2>
                         </div>
-                        <FormBefore />
-                        <p>After clicking the button, the page will be redirected to a third party payment system where you could make a deposit to complete your reservation.</p>
+                        <div>
+                            <FormBefore />
+                            <p>After clicking the button, the page will be redirected to a third party payment system where you could make a deposit to complete your reservation.</p>
+                        </div>
                     </FormProvider>
                 </form>
             </div>
