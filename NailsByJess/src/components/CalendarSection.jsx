@@ -31,7 +31,7 @@ export default function CalendarSection() {
                         </div>
                         <div>
                             <FormBefore />
-                            <p>After clicking the button, the page will be redirected to a third party payment system where you could make a deposit to complete your reservation.</p>
+                            <p>After clicking the button, the page will be redirected to a third party payment system where you could make a $20 deposit to complete your reservation.</p>
                         </div>
                     </FormProvider>
                 </form>
