@@ -1,6 +1,10 @@
 :root {
   --color1: rgb(255, 148, 219);
   --color2: #800020;
+  --cream: #fff8fc;
+  --rose: #f4c6da;
+  --text: #3b2430;
+  --shadow: rgba(128, 0, 32, .15);
 }
 
 h1 {
@@ -25,7 +29,7 @@ header {
   top: 0;
   background-color: white;
   padding: 10px;
-  z-index: 1000;
+  z-index: 9999;
 }
 
 h3 {
@@ -35,7 +39,7 @@ h3 {
 }
 
 .secondary {
-  background: none;
+  background: white;
   color: var(--color2);
   border: var(--color2) solid 1px;
 }

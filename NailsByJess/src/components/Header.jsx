@@ -10,8 +10,8 @@ export default function Header() {
 
     return (
         <>
-            <header>
-                <Link to='/'><h1>Jess's Nails<span className="smaller">Home Based | San Pedro, CA</span></h1></Link>
+            <header className="customHeader">
+                <Link to='/'><h1>Jess's Nails<span className="smaller">Nail Studio | San Pedro, CA</span></h1></Link>
             </header>
         </>
     )
