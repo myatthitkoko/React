@@ -92,14 +92,6 @@
   );
 }
 
-.temp {
-  background: linear-gradient(
-  180deg,
-    white 45%,
-    var(--color2) 100%
-  );
-}
-
 .form {
     max-width: 400px;
     height: 100%;

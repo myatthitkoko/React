@@ -10,7 +10,7 @@ export default function Header() {
 
     return (
         <>
-            <header className="customHeader">
+            <header className={currentPage === "/services" ? "customHeader": undefined}>
                 <Link to='/'><h1>Jess's Nails<span className="smaller">Nail Studio | San Pedro, CA</span></h1></Link>
             </header>
         </>

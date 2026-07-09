@@ -55,7 +55,7 @@
 .react-calendar__navigation{
   display: flex;
   justify-content: center;
-  height: 50px !important;
+  height: 50px;
   margin-bottom: 0 !important;
 }
 
@@ -234,11 +234,15 @@ abbr[title] {
     cursor:not-allowed;  
   }
 
-  .heading {
-    font-size: 60pt;
+  .react-calendar__navigation {
+    height: 100px;
   }
 
-  .react-calendar__month-view__weekdays {
-    font-size: 10pt;
+  .react-calendar__navigation__label {
+    font-size: 42pt;
+  }
+
+  .react-calendar__month-view__weekdays__weekday {
+    font-size: 18pt;
   }
 }

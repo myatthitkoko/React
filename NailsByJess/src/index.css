@@ -32,6 +32,14 @@ header {
   z-index: 9999;
 }
 
+.customHeader {
+    background-color: var(--color2);
+}
+
+.customHeader h1 {
+  color: white;
+}
+
 h3 {
   color: var(--color2);
   font-size: 18pt;
@@ -66,3 +74,9 @@ a {
   text-decoration: none;
 }
 
+.title {
+    text-align: center;
+    color: var(--color2);
+    margin: 0;
+    padding: 20px;
+}
