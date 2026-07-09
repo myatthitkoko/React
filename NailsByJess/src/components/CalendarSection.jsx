@@ -36,8 +36,7 @@ export default function CalendarSection() {
                     </FormProvider>
                 </form>
             </div>
-        : null
-        }
+        :
         <div className={styles.content}>
             <h2 className={styles.title}>Get started by selecting a date</h2>
             <Calendar 
@@ -107,7 +106,7 @@ export default function CalendarSection() {
                 <h2>No Slots For This Date</h2>
                 <p>Try selecting another date to find availabile time slots</p>
             </div>}
-        </div>
+        </div> }
     </>
   );
 }
