@@ -44,6 +44,10 @@
   display: flex;
 }
 
+.formContent {
+  margin-bottom: 500px;
+}
+
 .messageExit {
   background: none;
   border: none;
@@ -71,7 +75,7 @@
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(50px);
+    transform: translateY(500px);
   }
 
   to {
@@ -198,7 +202,7 @@ textarea {
   box-sizing: border-box;
 }
 
-.form p {
+.formContent p {
     font-size: 14pt;
     text-align: justify;
 }
@@ -229,5 +233,9 @@ textarea {
 
     .separator input {
         min-width: 550px;
+    }
+
+    .formContent {
+      margin-bottom: 0px;
     }
 }

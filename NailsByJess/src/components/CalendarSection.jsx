@@ -29,7 +29,7 @@ export default function CalendarSection() {
                             <h2>You are making an appointment for {date.toDateString()} at {slot}</h2>
                             <div><p>Need to make a change?</p><button type="button" className={styles.messageExit} onClick={() => setOpenForm(false)}>Return to Time Slot</button></div>
                         </div>
-                        <div>
+                        <div className={styles.formContent}>
                             <FormBefore />
                             <p>After clicking the button, the page will be redirected to a third party payment system where you could make a $20 deposit to complete your reservation.</p>
                         </div>
