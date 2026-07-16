@@ -1,34 +1,80 @@
 [
   {
-    "date": "2026-07-18",
-    "time": "10:00 AM"
+    "date": "2026-07-16",
+    "time": "12:00 PM",
+    "name": "Stephen2",
+    "email": "rwylm23@gmail.com",
+    "comment": ""
+  },
+  {
+    "date": "2026-07-17",
+    "time": "02:00 PM",
+    "name": "Stephen5",
+    "email": "rwylm23@gmail.com",
+    "comment": ""
+  },
+  {
+    "date": "2026-07-16",
+    "time": "02:00 PM",
+    "name": "Stephen3",
+    "email": "rwylm23@gmail.com",
+    "phone": "4444441234123",
+    "comment": ""
   },
   {
     "date": "2026-07-18",
-    "time": "02:00 PM"
+    "time": "12:00 PM",
+    "name": "Stephen4",
+    "email": "rwylm23@gmail.com",
+    "phone": "",
+    "comment": "Infinite Salutations!"
+  },
+  {
+    "date": "2026-07-18",
+    "time": "04:00 PM",
+    "name": "Simply Stephen",
+    "email": "rwylm23@gmail.com",
+    "phone": "323 323 6855",
+    "comment": "I will get that vanity number for sure one of these days. ha ha ha. lol."
+  },
+  {
+    "date": "2026-08-13",
+    "time": "10:00 AM",
+    "name": "Taylor Swift",
+    "email": "taylorswift@gmail.com",
+    "phone": "323 8295 677",
+    "comment": "Hi, it's Tay. Can't wait to see you on Aug 13th at 10 sharp! <3 xoxo"
+  },
+  {
+    "date": "2026-07-31",
+    "time": "02:00 PM",
+    "name": "test",
+    "email": "testing@test.com",
+    "phone": "",
+    "comment": ""
   },
   {
     "date": "2026-07-27",
-    "time": "04:00 PM"
+    "time": "12:00 PM",
+    "name": "Sue Sue Heck",
+    "email": "hilol@gmail.com",
+    "phone": "",
+    "comment": "Year of Sue, here we go!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
   },
   {
-    "date": "2026-07-15",
-    "time": "12:00 PM"
+    "date": "2026-07-30",
+    "time": "10:00 AM",
+    "name": "Beyond Birthday",
+    "email": "labb@murder.cases",
+    "phone": "",
+    "comment": ""
   },
   {
-    "date": "2026-07-17",
-    "time": "12:00 PM"
-  },
-  {
-    "date": "2026-07-17",
-    "time": "10:00 AM"
-  },
-  {
-    "date": "2026-07-17",
-    "time": "02:00 PM"
-  },
-  {
-    "date": "2026-07-17",
-    "time": "04:00 PM"
+    "date": "2026-07-31",
+    "time": "04:00 PM",
+    "name": "Augustine",
+    "email": "taylorswift@gmail.com",
+    "phone": "",
+    "comment": "it's almost august!"
   }
 ]

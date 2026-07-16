@@ -60,18 +60,21 @@ export default function CalendarSection() {
     openForm ? styles.open : styles.closed
   }`}>
                 <button className={styles.exit} onClick={() => setOpenForm(false)}><img src='doubleDownSign.svg'/></button>
-                <form className={styles.form}>
+                <div className={styles.form}>
                     <FormProvider>
                         <div className={styles.message}>
                             <h2>You are making an appointment for {date.toDateString()} at {slot}</h2>
                             <div><p>Need to make a change?</p><button type="button" className={styles.messageExit} onClick={() => setOpenForm(false)}>Return to Time Slot</button></div>
                         </div>
                         <div className={styles.formContent}>
-                            <FormBefore />
+                            <FormBefore 
+                            selected = {selected}
+                            slot = {slot}
+                            />
                             <p>After clicking the button, the page will be redirected to a third party payment system where you could make a $20 deposit to complete your reservation.</p>
                         </div>
                     </FormProvider>
-                </form>
+                </div>
             </div>
         :
         <div className={styles.content}>
