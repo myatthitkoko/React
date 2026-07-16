@@ -4,10 +4,28 @@ import path from "path";
 
 const app = express();
 
-app.get("/api/availability", (req, res) => {
-  const filePath = path.join(process.cwd(), "data", "availability.json");
-  const data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
-  res.json(data);
+const allSlots = [
+  "10:00 AM",
+  "12:00 PM",
+  "02:00 PM",
+  "04:00 PM"
+];
+
+app.get("/api/availability/:date", (req, res) => {
+  const { date } = req.params;
+
+  const filePath = path.join(process.cwd(), "data", "bookings.json");
+  const bookings = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+
+  const bookedTimes = bookings
+  .filter((booking) => booking.date === date)
+  .map((booking) => booking.time);
+
+  const availableSlots = allSlots.filter(
+    (slot)=> !bookedTimes.includes(slot)
+  )
+
+  res.json(availableSlots);
 });
 
 app.get("/api/hello", (req, res) => {

@@ -12,18 +12,46 @@ export default function CalendarSection() {
   const dateSectionRef = useRef(null);
   const timeSectionRef = useRef(null);
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const selected = date.toISOString().split("T")[0];
+  today.setHours(0,0,0,0);
+  const selected = date.toLocaleDateString("en-CA")
+
+  const filterPastSlots = (slots) => {
+    const now = new Date();
+    const isToday = selected === now.toLocaleDateString("en-CA");
+    if (!isToday) return slots;
+
+    return slots.filter((slot) => {
+        const [time, period] = slot.split(" ");
+        let [hours, minutes] = time.split(":").map(Number);
+
+        if (period === "PM" && hours !== 12) {
+            hours += 12;
+        }
+
+        if (period === "AM" && hours === 12) {
+            hours = 0;
+        }
+
+        const slotTime = new Date();
+        slotTime.setHours(hours, minutes, 0, 0)
+
+        return slotTime > now;
+    })
+  };
+
 
   const [availability, setAvailability] = useState(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch("/api/availability")
+    setAvailability(null);
+    setError("");
+    
+    fetch(`/api/availability/${selected}`)
     .then((res) => res.json())
-    .then((data) => setAvailability(data))
+    .then((data) => setAvailability(filterPastSlots(data)))
     .catch(() => setError("Unable to load availability."));
-  }, []);
+  }, [selected]);
 
   return (
     <>
@@ -82,11 +110,11 @@ export default function CalendarSection() {
             }
         </div> 
         :
-        availability[selected] ? 
+        availability.length > 0 ? 
             <div className={styles.yesSlots} id='dateSelected'>
                 <h2>Available Time Slots</h2> 
                 <p>Please select a time slot to continue</p>
-                {availability[selected]?.map((time) => (
+                {availability.map((time) => (
                     <div className='timeSlots' key={time}>
                         <label>
                             <input 
