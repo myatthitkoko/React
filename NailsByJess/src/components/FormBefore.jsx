@@ -9,14 +9,14 @@ export default function FormBefore() {
     return (
         <div>
             <div className={styles.formSection}>
-                <h2 className={styles.title2}>Contact Info</h2>
+                <h2 className={styles.title2}>Contact Info <span className="smaller"><span className="red">*</span> indicates required</span></h2>
                 <div className={`glass ${styles.formSection} ${styles.credentials}`}>
                     <div className={styles.separator}>
+                        <label for='Name'>Name <span className="red">*</span></label>
                         <input 
                             value={name.value}
                             id='Name'
                             onChange={(e)=>name.setValue(e.target.value)}
-                            placeholder="Name"
                             type="text"
                             maxLength={70}
                             className="glass"
@@ -24,11 +24,13 @@ export default function FormBefore() {
                         />
                     </div>
                     <div className={styles.separator}>
+                        <label for='Email'>Email <span className="red">*</span></label>
                         <InputEmail
                             {...email}
                         />
                     </div>
                     <div className={styles.separator}>
+                        <label for="Phone">Phone</label>
                         <InputPhone
                             {...phone}
                         />

@@ -204,6 +204,10 @@ textarea {
   padding: 15px;
 }
 
+.noSlots img {
+  height: 3em;
+}
+
 .formContent p {
     font-size: 14pt;
     text-align: justify;

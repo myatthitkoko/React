@@ -45,7 +45,6 @@ export default function InputEmail({
                         setEmailWarning(validateFullEmail(f.target.value));
                     }
                 }}
-                placeholder="Email"
                 type="email"
                 required
             />

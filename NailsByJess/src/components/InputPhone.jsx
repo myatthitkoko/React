@@ -29,7 +29,6 @@ export default function InputPhone({
                 onChange={(g)=>{
                     setPhone(Vanity(g.target.value));
                 }}
-                placeholder="Phone"
                 type="tel"
                 onBlur={(g)=>{
                     if (g.target.value.trim() === "") {

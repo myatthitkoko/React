@@ -1,10 +1,9 @@
 import styles from '../styleSheets/Booking.module.css'
-import availability from '../data/availability.json'
-import { useState } from 'react';
 import Calendar from 'react-calendar';
 import FormBefore from "../components/FormBefore";
 import { FormProvider } from "../components/FormProvider";
 import { useRef } from 'react';
+import { useEffect, useState } from "react";
 
 export default function CalendarSection() {
   const [date, setDate] = useState(new Date());
@@ -15,6 +14,16 @@ export default function CalendarSection() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const selected = date.toISOString().split("T")[0];
+
+  const [availability, setAvailability] = useState(null);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    fetch("/api/availability")
+    .then((res) => res.json())
+    .then((data) => setAvailability(data))
+    .catch(() => setError("Unable to load availability."));
+  }, []);
 
   return (
     <>
@@ -62,7 +71,18 @@ export default function CalendarSection() {
             <span className="bold">Selected Date:</span>{' '}
             {date.toDateString()}
         </p>
-        {availability[selected] ? 
+        {!availability ? 
+        <div className={styles.noSlots} ref={dateSectionRef}>
+            {error ? <h2>{error}</h2>
+            :
+            <>
+                <h2>Loading slots...</h2>
+                <img src="https://media.tenor.com/G7LfW0O5qb8AAAAi/loading-gif.gif" alt="loading gif" />
+            </>
+            }
+        </div> 
+        :
+        availability[selected] ? 
             <div className={styles.yesSlots} id='dateSelected'>
                 <h2>Available Time Slots</h2> 
                 <p>Please select a time slot to continue</p>
