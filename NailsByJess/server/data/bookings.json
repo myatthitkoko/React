@@ -76,5 +76,29 @@
     "email": "taylorswift@gmail.com",
     "phone": "",
     "comment": "it's almost august!"
+  },
+  {
+    "date": "2026-07-22",
+    "time": "12:00 PM",
+    "name": "Stephen Ko",
+    "email": "rwylm23@gmail.com",
+    "phone": "6266201471",
+    "comment": "hi. hope to see you soon!"
+  },
+  {
+    "date": "2026-07-24",
+    "time": "10:00 AM",
+    "name": "Addison Rae",
+    "email": "raeaddi@gmail.com",
+    "phone": "",
+    "comment": ""
+  },
+  {
+    "date": "2026-07-24",
+    "time": "02:00 PM",
+    "name": "Myat Thit Ko Ko",
+    "email": "kom9505@student.laccd.edu",
+    "phone": "",
+    "comment": ""
   }
 ]
