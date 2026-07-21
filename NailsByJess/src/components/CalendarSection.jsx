@@ -15,28 +15,16 @@ export default function CalendarSection() {
   today.setHours(0,0,0,0);
   const selected = date.toLocaleDateString("en-CA")
 
-  const filterPastSlots = (slots) => {
-    const now = new Date();
-    const isToday = selected === now.toLocaleDateString("en-CA");
-    if (!isToday) return slots;
+  const aWeekInAdvance = (slots) => {
+    const sixDaysLater = new Date(today);
+    sixDaysLater.setHours(0,0,0,0);
+    sixDaysLater.setDate(today.getDate() + 6);
 
-    return slots.filter((slot) => {
-        const [time, period] = slot.split(" ");
-        let [hours, minutes] = time.split(":").map(Number);
+    if (date <= sixDaysLater) {
+        return [];
+    }
 
-        if (period === "PM" && hours !== 12) {
-            hours += 12;
-        }
-
-        if (period === "AM" && hours === 12) {
-            hours = 0;
-        }
-
-        const slotTime = new Date();
-        slotTime.setHours(hours, minutes, 0, 0)
-
-        return slotTime > now;
-    })
+    return slots;
   };
 
 
@@ -49,7 +37,7 @@ export default function CalendarSection() {
     
     fetch(`/api/availability/${selected}`)
     .then((res) => res.json())
-    .then((data) => setAvailability(filterPastSlots(data)))
+    .then((data) => setAvailability(aWeekInAdvance(data)))
     .catch(() => setError("Unable to load availability."));
   }, [selected]);
 
@@ -63,7 +51,7 @@ export default function CalendarSection() {
                 <div className={styles.form}>
                     <FormProvider>
                         <div className={styles.message}>
-                            <h2>You are making an appointment for {date.toDateString()} at {slot}</h2>
+                            <h2>You are making an appointment for {date.toDateString()} at {new Date(slot).toLocaleTimeString("en-CA", {timeZone: "America/Los_Angeles", hour: "numeric", minute: "2-digit"})}</h2>
                             <div><p>Need to make a change?</p><button type="button" className={styles.messageExit} onClick={() => setOpenForm(false)}>Return to Time Slot</button></div>
                         </div>
                         <div className={styles.formContent}>
@@ -79,6 +67,7 @@ export default function CalendarSection() {
         :
         <div className={styles.content}>
             <h2 className={styles.title}>Get started by selecting a date</h2>
+            <p className="smaller title">Book at least a week in advance</p>
             <Calendar 
                 minDetail="month"
                 maxDetail="month"
@@ -117,23 +106,23 @@ export default function CalendarSection() {
             <div className={styles.yesSlots} id='dateSelected'>
                 <h2>Available Time Slots</h2> 
                 <p>Please select a time slot to continue</p>
-                {availability.map((time) => (
-                    <div className='timeSlots' key={time}>
+                {availability.map((timeObject) => (
+                    <div className='timeSlots' key={timeObject.value}>
                         <label>
                             <input 
                             type='radio' 
                             name='time' 
-                            id={time} 
-                            value={time} 
-                            checked = {slot === time}
+                            id={timeObject.display} 
+                            value={timeObject.value} 
+                            checked = {slot === timeObject.value}
                             onChange={(e) => {
-                                setSlot(e.target.value);
+                                setSlot(timeObject.value);
                                 timeSectionRef.current?.scrollIntoView({
                                 behavior: "smooth"
                                 });
                             }}
                             />
-                            {time}
+                            {timeObject.display}
                         </label>
                     </div>
                 ))}

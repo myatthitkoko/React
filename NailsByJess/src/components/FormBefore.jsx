@@ -13,8 +13,7 @@ export default function FormBefore({selected, slot}) {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                date: selected,
-                time: slot,
+                dateAndTime: slot,
                 name: name.value,
                 email: email.email,
                 phone: phone.phone,

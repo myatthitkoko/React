@@ -1,120 +1,58 @@
 [
   {
-    "date": "2026-07-16",
-    "time": "12:00 PM",
-    "name": "Stephen2",
-    "email": "rwylm23@gmail.com",
-    "comment": ""
-  },
-  {
-    "date": "2026-07-17",
-    "time": "02:00 PM",
-    "name": "Stephen5",
-    "email": "rwylm23@gmail.com",
-    "comment": ""
-  },
-  {
-    "date": "2026-07-16",
-    "time": "02:00 PM",
-    "name": "Stephen3",
-    "email": "rwylm23@gmail.com",
-    "phone": "4444441234123",
-    "comment": ""
-  },
-  {
-    "date": "2026-07-18",
-    "time": "12:00 PM",
-    "name": "Stephen4",
+    "dateAndTime": "2026-07-28T23:00:00.000Z",
+    "name": "Stephen",
     "email": "rwylm23@gmail.com",
     "phone": "",
-    "comment": "Infinite Salutations!"
+    "comment": ""
   },
   {
-    "date": "2026-07-18",
-    "time": "04:00 PM",
+    "dateAndTime": "2026-08-01T18:00:00.000Z",
+    "name": "Taylor Swift",
+    "email": "swifttaylor@gmail.com",
+    "phone": "82956779438",
+    "comment": "Thank you for the lovely bouquets!"
+  },
+  {
+    "dateAndTime": "2026-08-02T17:00:00.000Z",
     "name": "Simply Stephen",
     "email": "rwylm23@gmail.com",
-    "phone": "323 323 6855",
-    "comment": "I will get that vanity number for sure one of these days. ha ha ha. lol."
-  },
-  {
-    "date": "2026-08-13",
-    "time": "10:00 AM",
-    "name": "Taylor Swift",
-    "email": "taylorswift@gmail.com",
-    "phone": "323 8295 677",
-    "comment": "Hi, it's Tay. Can't wait to see you on Aug 13th at 10 sharp! <3 xoxo"
-  },
-  {
-    "date": "2026-07-31",
-    "time": "02:00 PM",
-    "name": "test",
-    "email": "testing@test.com",
     "phone": "",
-    "comment": ""
+    "comment": "I am so excited to see you excited!"
   },
   {
-    "date": "2026-07-27",
-    "time": "12:00 PM",
-    "name": "Sue Sue Heck",
-    "email": "hilol@gmail.com",
-    "phone": "",
-    "comment": "Year of Sue, here we go!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-  },
-  {
-    "date": "2026-07-30",
-    "time": "10:00 AM",
-    "name": "Beyond Birthday",
+    "dateAndTime": "2026-08-02T21:00:00.000Z",
+    "name": "L Lawliet",
     "email": "labb@murder.cases",
     "phone": "",
     "comment": ""
   },
   {
-    "date": "2026-07-31",
-    "time": "04:00 PM",
-    "name": "Augustine",
-    "email": "taylorswift@gmail.com",
-    "phone": "",
-    "comment": "it's almost august!"
-  },
-  {
-    "date": "2026-07-22",
-    "time": "12:00 PM",
-    "name": "Stephen Ko",
-    "email": "rwylm23@gmail.com",
-    "phone": "6266201471",
-    "comment": "hi. hope to see you soon!"
-  },
-  {
-    "date": "2026-07-24",
-    "time": "10:00 AM",
-    "name": "Addison Rae",
-    "email": "raeaddi@gmail.com",
-    "phone": "",
+    "dateAndTime": "2026-09-28T23:00:00.000Z",
+    "name": "Joe Alwyn",
+    "email": "toystory@gmail.com",
+    "phone": "82956779438",
     "comment": ""
   },
   {
-    "date": "2026-07-24",
-    "time": "02:00 PM",
-    "name": "Myat Thit Ko Ko",
-    "email": "kom9505@student.laccd.edu",
-    "phone": "",
-    "comment": ""
-  },
-  {
-    "date": "2026-07-24",
-    "time": "04:00 PM",
-    "name": "Taylor Swift",
-    "email": "swifttaylor@gmail.com",
-    "phone": "",
-    "comment": "Thank you for the lovely bouquet!"
-  },
-  {
-    "date": "2026-07-24",
-    "time": "12:00 PM",
+    "dateAndTime": "2026-09-19T18:00:00.000Z",
     "name": "Jessie",
     "email": "toystory@gmail.com",
     "phone": "",
     "comment": "I knew it I knew you"
+  },
+  {
+    "dateAndTime": "2026-09-05T19:00:00.000Z",
+    "name": "Stephen Strange",
+    "email": "vishanti@gmail.com",
+    "phone": "",
+    "comment": "I am evil and I am going to book in the middle of the entire day slot to block the whole day. You can't book at 10 because only 2 hours till 12. You can't book at 15 because only 2 hours till 17. Hahaha"
+  },
+  {
+    "dateAndTime": "2026-09-12T20:00:00.000Z",
+    "name": "La Vonne",
+    "email": "hilol@gmail.com",
+    "phone": "",
+    "comment": ""
   }
 ]
