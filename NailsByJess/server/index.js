@@ -7,57 +7,52 @@ const app = express();
 
 app.use(express.json());
 
+const generateSlots = (openHour, closeHour, date) => {
+  const slots = [];
+
+  for (let hour = openHour; hour+3 <= closeHour; hour++) {
+    //Date format YYYY-MM-DDTHH:MM:SS
+    const localDateTime =`${date}T${String(hour).padStart(2, "0")}:00:00`;
+    const utcDate = fromZonedTime(localDateTime, "America/Los_Angeles");
+    slots.push(utcDate);
+  };
+
+  return slots;
+};
+
+const overlaps = (slotStart, bookingStart) => {
+  //format hour * minutes * seconds * milliseconds because getTime returns milliseconds
+  const slotEnd = new Date(slotStart.getTime() + 3 * 60 * 60 * 1000);
+  const bookingEnd = new Date(bookingStart.getTime() + 3 * 60 * 60 * 1000);
+
+  return ( //allows back to back bookings, return true to block slots, pattern of startA < endB && endA > startB
+    slotStart < bookingEnd // new booking starting before existing booking end time
+    && 
+    slotEnd > bookingStart //new booking ending later than existing booking start time
+  );
+};
+
+function filePath() {
+  return JSON.parse(fs.readFileSync(
+    path.join(process.cwd(), "data", "bookings.json"
+  ), "utf-8"));
+};
+
 app.get("/api/availability/:date", (req, res) => {
   const { date } = req.params;
+  
   const selectedDate = new Date(date);
-
-  const generateSlots = (
-    openHour, closeHour
-  ) => {
-    const slots = [];
-
-    for (let hour = openHour; hour+3 <= closeHour; hour++) {
-      const localDateTime =
-      `${date}T${String(hour).padStart(2, "0")}:00:00`;
-
-      const utcDate = fromZonedTime(
-        localDateTime,
-        "America/Los_Angeles"
-      );
-      slots.push(utcDate);
-    };
-
-    return slots;
-  };
-
   const day = selectedDate.getDay();
-  const possibleSlots = (day === 0  || day === 6) ? generateSlots(10, 17): generateSlots(16, 19);
+  const possibleSlots = (day === 0  || day === 6) ? generateSlots(10, 17, date): generateSlots(16, 19, date);
 
-  const overlaps = (slotStart, bookingStart, bookingEnd) => {
-    const slotEnd = new Date(
-      slotStart.getTime() + 3 * 60 * 60 * 1000
-    );
-
-    return (
-      slotStart < bookingEnd &&
-      slotEnd > bookingStart
-    );
-  };
-
-  const filePath = path.join(process.cwd(), "data", "bookings.json");
-  const bookings = JSON.parse(fs.readFileSync(filePath, "utf-8"));
-
+  const bookings = filePath();
 
   const availableSlots = possibleSlots.filter(
-      (slot)=> { return !bookings.some((booking) =>  {
-        const bookingStart = new Date(booking.dateAndTime);
-        console.log(bookingStart)
-        const bookingEnd = new Date(bookingStart.getTime() + 3 * 60 * 60 * 1000);
-        console.log(bookingEnd)
+      (newSlot)=> { return !bookings.some((booking) =>  {
+        const existingBooking = new Date(booking.dateAndTime);
         return overlaps(
-          slot,
-          bookingStart,
-          bookingEnd
+          newSlot,
+          existingBooking,
         );
       });
   });
