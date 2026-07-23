@@ -6,7 +6,8 @@ import { useForm } from "./FormProvider.jsx"
 export default function FormBefore({selected, slot}) {
     const { name, text, email, phone } = useForm();
 
-    function sendInfo() {
+    function sendInfo(e) {
+        e.preventDefault();
         fetch("/api/booking", {
             method: "POST",
             headers: {
