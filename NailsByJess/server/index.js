@@ -2,6 +2,7 @@ import express from "express";
 import fs from "fs";
 import path from "path";
 import { fromZonedTime } from "date-fns-tz";
+import { json } from "stream/consumers";
 
 const app = express();
 
@@ -32,11 +33,37 @@ const overlaps = (slotStart, bookingStart) => {
   );
 };
 
-function filePath() {
+function readBookings() {
   return JSON.parse(fs.readFileSync(
     path.join(process.cwd(), "data", "bookings.json"
   ), "utf-8"));
 };
+
+function saveBookings(bookings) {
+  fs.writeFileSync(path.join(process.cwd(), "data", "bookings.json"), JSON.stringify(bookings, null, 2));
+}
+
+function createBooking(newBooking) {
+  const bookings = readBookings();
+
+  const alreadyBooked = bookings.some((booking) => booking.dateAndTime === newBooking.dateAndTime);
+
+  if (alreadyBooked) {
+    return {
+      success: false,
+      message: "This time slot is no longer available."
+    };
+  }
+
+  bookings.push(newBooking);
+
+  saveBookings(bookings);
+
+  return {
+    success: true,
+    message: "Your appointment has been accepted."
+  };
+}
 
 app.get("/api/availability/:date", (req, res) => {
   const { date } = req.params;
@@ -45,7 +72,7 @@ app.get("/api/availability/:date", (req, res) => {
   const day = selectedDate.getDay();
   const possibleSlots = (day === 0  || day === 6) ? generateSlots(10, 17, date): generateSlots(16, 19, date);
 
-  const bookings = filePath();
+  const bookings = readBookings();
 
   const availableSlots = possibleSlots.filter(
       (newSlot)=> { return !bookings.some((booking) =>  {
@@ -79,41 +106,14 @@ app.post("/api/booking", (req, res) => {
     comment
   } = req.body;
 
-  const filePath = path.join(
-    process.cwd(),
-    "data",
-    "bookings.json"
-  );
+  const result = createBooking(req.body);
 
-  const bookings = JSON.parse(
-    fs.readFileSync(filePath, "utf-8")
-  );
-
-  const alreadyBooked = bookings.some((booking) => booking.dateAndTime === dateAndTime);
-
-  if (alreadyBooked) {
-    return res.status(409).json({
-      success: false,
-      message: "This time slot is no longer available."
-    });
+  if (result.success) {
+    res.json(result)
+  } else {
+    return res.status(409).json(result);
   }
 
-  const newBooking = {
-    dateAndTime,
-    name,
-    email,
-    phone,
-    comment
-  };
-
-  bookings.push(newBooking);
-
-  fs.writeFileSync(filePath, JSON.stringify(bookings, null, 2));
-
-  res.json({
-    success: true,
-    message: "Your appointment has been accepted."
-  })
 });
 
 app.listen(3000, "0.0.0.0", () => {
