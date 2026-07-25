@@ -1,7 +1,7 @@
 import styles from '../styleSheets/Home.module.css'
 import { Link } from "react-router-dom";
 
-export default function() {
+export default function Summary() {
     return (
         <>
             <div className={styles.Summary}>

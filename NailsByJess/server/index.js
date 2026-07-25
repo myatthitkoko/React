@@ -46,7 +46,16 @@ function saveBookings(bookings) {
 function createBooking(newBooking) {
   const bookings = readBookings();
 
-  const alreadyBooked = bookings.some((booking) => booking.dateAndTime === newBooking.dateAndTime);
+  const newBookingStart = new Date(newBooking.dateAndTime);
+
+  const alreadyBooked = bookings.some((booking) =>  {
+    const existingBookingStart = new Date(booking.dateAndTime);
+
+    return overlaps(
+      newBookingStart,
+      existingBookingStart
+    );
+  });
 
   if (alreadyBooked) {
     return {

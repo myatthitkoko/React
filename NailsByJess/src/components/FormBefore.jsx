@@ -3,7 +3,7 @@ import InputEmail from "./InputEmail.jsx"
 import InputPhone from "./InputPhone.jsx"
 import { useForm } from "./FormProvider.jsx"
 
-export default function FormBefore({selected, slot}) {
+export default function FormBefore({selected, slot, refetchAvailability}) {
     const { name, text, email, phone } = useForm();
 
     function sendInfo(e) {
@@ -24,6 +24,7 @@ export default function FormBefore({selected, slot}) {
         .then((res) => res.json())
         .then((data) => {
             alert(data.message);
+            refetchAvailability();
         })
     }
 

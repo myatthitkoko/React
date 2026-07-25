@@ -1,6 +1,6 @@
 import styles from '../styleSheets/Booking.module.css';
 
-export default function ({availability, slot, onSlotSelect}) {
+export default function TimeSlots({availability, slot, onSlotSelect}) {
     return (
         <>
             <h2>Available Time Slots</h2> 

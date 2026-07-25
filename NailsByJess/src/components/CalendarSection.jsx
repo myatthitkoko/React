@@ -4,20 +4,7 @@ import DatePicker from '../components/DatePicker';
 import TimeSlots from '../components/TimeSlots';
 import { useRef } from 'react';
 import { useEffect, useState } from "react";
-
-function aWeekInAdvance (date, slots) {
-    const today = new Date();
-    today.setHours(0,0,0,0);
-    const sixDaysLater = new Date(today);
-    sixDaysLater.setHours(0,0,0,0);
-    sixDaysLater.setDate(today.getDate() + 6);
-
-    if (date <= sixDaysLater) {
-        return null;
-    }
-
-    return slots;
-};
+import useFetchAvailability from '../components/useFetchAvailability';
 
 export default function CalendarSection() {
   const [date, setDate] = useState(new Date());
@@ -28,22 +15,8 @@ export default function CalendarSection() {
   const timeSectionRef = useRef(null);
 
   const selected = date.toLocaleDateString("en-CA")
-  const [availability, setAvailability] = useState(null);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    setLoading(true);
-    //the following two lines to clean out old data from a different date
-    setAvailability(null);
-    setError("");
-    
-    fetch(`/api/availability/${selected}`)
-    .then((res) => res.json())
-    .then((data) => setAvailability(aWeekInAdvance(date, data)))
-    .catch(() => setError("Unable to load availability."))
-    .finally(() => setLoading(false))
-  }, [selected]);
+  const { availability, loading, error, refetchAvailability } = useFetchAvailability(selected);
 
   return (
     <>
@@ -53,6 +26,7 @@ export default function CalendarSection() {
                 slot = {slot}
                 selected = {selected}
                 date = {date}
+                refetchAvailability = {refetchAvailability}
                 onClose = {() => setOpenForm(false)}
             />
         :

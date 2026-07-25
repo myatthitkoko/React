@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-export default function Services({URL}) {
+export default function InstagramEmbed({URL}) {
     useEffect(() => {
     const loadInstagram = () => {
       if (window.instgrm) {

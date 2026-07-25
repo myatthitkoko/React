@@ -1,7 +1,7 @@
 import styles from '../styleSheets/Booking.module.css';
 import Calendar from 'react-calendar';
 
-export default function ({date, onDateChange}) {
+export default function DatePicker({date, onDateChange}) {
     const today = new Date();
     today.setHours(0,0,0,0);
     return (
