@@ -1,8 +1,6 @@
 import express from "express";
-import fs from "fs";
-import path from "path";
 import { fromZonedTime } from "date-fns-tz";
-import { json } from "stream/consumers";
+import { db } from "./db/connection.js";
 
 const app = express();
 
@@ -33,23 +31,37 @@ const overlaps = (slotStart, bookingStart) => {
   );
 };
 
-function readBookings() {
-  return JSON.parse(fs.readFileSync(
-    path.join(process.cwd(), "data", "bookings.json"
-  ), "utf-8"));
-};
-
-function saveBookings(bookings) {
-  fs.writeFileSync(path.join(process.cwd(), "data", "bookings.json"), JSON.stringify(bookings, null, 2));
+function toMYSQLDate(date) {
+  return new Date(date)
+  .toISOString()
+  .slice(0, 19)
+  .replace("T", " ");
 }
 
-function createBooking(newBooking) {
-  const bookings = readBookings();
+async function readBookings() {
+  const [rows] = await db.query("SELECT * FROM bookings");
+  return rows;
+};
+
+async function saveBooking(booking) {
+  const sql = `INSERT INTO bookings (date_and_time, name, email, phone, comment) VALUES (?, ?, ?, ?, ?);`
+
+  await db.query(sql, [
+    toMYSQLDate(booking.dateAndTime),
+    booking.name,
+    booking.email,
+    booking.phone,
+    booking.comment
+  ]);
+}
+
+async function createBooking(newBooking) {
+  const bookings = await readBookings();
 
   const newBookingStart = new Date(newBooking.dateAndTime);
 
   const alreadyBooked = bookings.some((booking) =>  {
-    const existingBookingStart = new Date(booking.dateAndTime);
+    const existingBookingStart = new Date(booking.date_and_time);
 
     return overlaps(
       newBookingStart,
@@ -64,9 +76,7 @@ function createBooking(newBooking) {
     };
   }
 
-  bookings.push(newBooking);
-
-  saveBookings(bookings);
+  await saveBooking(newBooking);
 
   return {
     success: true,
@@ -74,18 +84,18 @@ function createBooking(newBooking) {
   };
 }
 
-app.get("/api/availability/:date", (req, res) => {
+app.get("/api/availability/:date", async (req, res) => {
   const { date } = req.params;
   
   const selectedDate = new Date(date);
   const day = selectedDate.getDay();
   const possibleSlots = (day === 0  || day === 6) ? generateSlots(10, 17, date): generateSlots(16, 19, date);
 
-  const bookings = readBookings();
+  const bookings = await readBookings();
 
   const availableSlots = possibleSlots.filter(
       (newSlot)=> { return !bookings.some((booking) =>  {
-        const existingBooking = new Date(booking.dateAndTime);
+        const existingBooking = new Date(booking.date_and_time);
         return overlaps(
           newSlot,
           existingBooking,
@@ -106,7 +116,7 @@ app.get("/api/availability/:date", (req, res) => {
 
 });
 
-app.post("/api/booking", (req, res) => {
+app.post("/api/booking", async (req, res) => {
   const {
     dateAndTime,
     name,
@@ -115,7 +125,7 @@ app.post("/api/booking", (req, res) => {
     comment
   } = req.body;
 
-  const result = createBooking(req.body);
+  const result = await createBooking(req.body);
 
   if (result.success) {
     res.json(result)
