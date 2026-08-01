@@ -135,6 +135,18 @@ app.post("/api/booking", async (req, res) => {
 
 });
 
+app.get("/test-for-db", async (req, res) => {
+  try {
+    const [rows] = await db.query("SELECT 1");
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      error: err.message
+    });
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, "0.0.0.0", () => {
