@@ -135,23 +135,6 @@ app.post("/api/booking", async (req, res) => {
 
 });
 
-app.get("/test-for-db", async (req, res) => {
-  try {
-    const [rows] = await db.query("SELECT 1");
-    res.json(rows);
-  } catch (err) {
-    console.error("DATABASE ERROR:", err);
-
-    res.status(500).json({
-      name: err.name,
-      message: err.message,
-      code: err.code,
-      errno: err.errno,
-      stack: err.stack
-    });
-  }
-});
-
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, "0.0.0.0", () => {
