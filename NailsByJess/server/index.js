@@ -140,9 +140,14 @@ app.get("/test-for-db", async (req, res) => {
     const [rows] = await db.query("SELECT 1");
     res.json(rows);
   } catch (err) {
-    console.error(err);
+    console.error("DATABASE ERROR:", err);
+
     res.status(500).json({
-      error: err.message
+      name: err.name,
+      message: err.message,
+      code: err.code,
+      errno: err.errno,
+      stack: err.stack
     });
   }
 });
