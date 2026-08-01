@@ -3,6 +3,8 @@ import { fromZonedTime } from "date-fns-tz";
 import { db } from "./db/connection.js";
 import cors from "cors";
 
+const app = express();
+
 app.use(cors({origin: "https://jesseniasnailss.vercel.app"}));
 
 const generateSlots = (openHour, closeHour, date) => {
