@@ -20,9 +20,8 @@ export default function useFetchAvailability(selected) {
     const [loading, setLoading] = useState(false);
 
     async function refetchAvailability () {
-        console.log("fetching availability", selected);
         setLoading(true);
-        //the following two lines to clean out old data from a different date
+        //the following two lines clean out old data from a different date
         setAvailability(null);
         setError("");
         

@@ -14,6 +14,7 @@ export default function BookingForm( {open, slot, selected, date, onClose, refet
                     </div>
                     <div className={styles.formContent}>
                         <FormBefore 
+                        onClose = {onClose}
                         selected = {selected}
                         slot = {slot}
                         refetchAvailability = {refetchAvailability}
