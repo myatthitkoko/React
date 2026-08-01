@@ -8,7 +8,7 @@ export default function FormBefore({selected, slot, refetchAvailability}) {
 
     function sendInfo(e) {
         e.preventDefault();
-        fetch("/api/booking", {
+        fetch("https://react-production-bd8a.up.railway.app/api/booking", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

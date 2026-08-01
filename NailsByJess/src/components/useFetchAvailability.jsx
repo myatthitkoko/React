@@ -20,12 +20,13 @@ export default function useFetchAvailability(selected) {
     const [loading, setLoading] = useState(false);
 
     async function refetchAvailability () {
+        console.log("fetching availability", selected);
         setLoading(true);
         //the following two lines to clean out old data from a different date
         setAvailability(null);
         setError("");
         
-        fetch(`/api/availability/${selected}`)
+        fetch(`https://react-production-bd8a.up.railway.app/api/availability/${selected}`)
         .then((res) => res.json())
         .then((data) => setAvailability(aWeekInAdvance(new Date(selected), data)))
         .catch(() => setError("Unable to load availability."))
