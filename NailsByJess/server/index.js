@@ -1,10 +1,9 @@
 import express from "express";
 import { fromZonedTime } from "date-fns-tz";
 import { db } from "./db/connection.js";
+import cors from "cors";
 
-const app = express();
-
-app.use(express.json());
+app.use(cors({origin: "https://jesseniasnailss.vercel.app"}));
 
 const generateSlots = (openHour, closeHour, date) => {
   const slots = [];
