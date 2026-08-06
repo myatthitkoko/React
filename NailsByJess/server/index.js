@@ -2,6 +2,7 @@ import express from "express";
 import { fromZonedTime } from "date-fns-tz";
 import { db } from "./db/connection.js";
 import cors from "cors";
+import { sendMail } from "./emailAPI.js"
 
 const app = express();
 app.use(express.json());
@@ -130,7 +131,8 @@ app.post("/api/booking", async (req, res) => {
   const result = await createBooking(req.body);
 
   if (result.success) {
-    res.json(result)
+    res.json(result);
+    sendMail(req.body.email);
   } else {
     return res.status(409).json(result);
   }
