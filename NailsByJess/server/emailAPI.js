@@ -9,7 +9,7 @@ export async function sendMail(destination) {
     try {
         const result = await resend.emails
         .send({
-        from: 'onboarding@resend.dev',
+        from: 'no-reply@myatthitkoko.com',
         to: destination,
         subject: 'Test Email',
         html: '<p>Congrats on successfully sending your <strong>email</strong>!</p>'
