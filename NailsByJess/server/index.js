@@ -1,4 +1,5 @@
 import express from "express";
+import { randomBytes } from 'crypto';
 import { fromZonedTime, toZonedTime } from "date-fns-tz";
 import { db } from "./db/connection.js";
 import cors from "cors";
@@ -47,9 +48,11 @@ async function readBookings() {
 };
 
 async function saveBooking(booking) {
-  const sql = `INSERT INTO bookings (date_and_time, name, email, phone, comment) VALUES (?, ?, ?, ?, ?);`
+  const bookingID = randomBytes(16).toString("base64url");
+  const sql = `INSERT INTO bookings (id, date_and_time, name, email, phone, comment) VALUES (?, ?, ?, ?, ?, ?);`
 
-  const [result] = await db.query(sql, [
+  await db.query(sql, [
+    bookingID,
     toMYSQLDate(booking.dateAndTime),
     booking.name,
     booking.email,
@@ -57,7 +60,7 @@ async function saveBooking(booking) {
     booking.comment
   ]);
 
-  return result.insertId;
+  return bookingID;
 }
 
 async function createBooking(newBooking) {
@@ -141,7 +144,7 @@ app.post("/api/booking", async (req, res) => {
       req.body.name, 
       result.bookingID, 
       convertedTime.toDateString(), 
-      convertedTime.toLocaleDateString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true})
+      convertedTime.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true})
     );
   } else {
     return res.status(409).json(result);

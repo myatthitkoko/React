@@ -1,5 +1,5 @@
 CREATE TABLE bookings (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id char(22) NOT NULL PRIMARY KEY,
     date_and_time DATETIME NOT NULL,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(255) NOT NULL,
