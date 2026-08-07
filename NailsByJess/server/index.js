@@ -132,10 +132,17 @@ app.post("/api/booking", async (req, res) => {
   } = req.body;
 
   const result = await createBooking(req.body);
+  const convertedTime = toZonedTime(req.body.dateAndTime, "America/Los_Angeles");
 
   if (result.success) {
     res.json(result);
-    sendMail(req.body.email, req.body.name, result.bookingID, toMYSQLDate(toZonedTime(req.body.dateAndTime, "America/Los_Angeles")));
+    sendMail(
+      req.body.email, 
+      req.body.name, 
+      result.bookingID, 
+      convertedTime.toDateString(), 
+      convertedTime.toLocaleDateString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true})
+    );
   } else {
     return res.status(409).json(result);
   }
