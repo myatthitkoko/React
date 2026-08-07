@@ -86,7 +86,7 @@ async function createBooking(newBooking) {
   return {
     success: true,
     message: "Your appointment has been accepted.",
-    ID: bookingID
+    bookingID: bookingID
   };
 }
 
