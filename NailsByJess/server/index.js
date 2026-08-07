@@ -1,5 +1,5 @@
 import express from "express";
-import { fromZonedTime } from "date-fns-tz";
+import { fromZonedTime, toZonedTime } from "date-fns-tz";
 import { db } from "./db/connection.js";
 import cors from "cors";
 import { sendMail } from "./emailAPI.js"
@@ -49,13 +49,15 @@ async function readBookings() {
 async function saveBooking(booking) {
   const sql = `INSERT INTO bookings (date_and_time, name, email, phone, comment) VALUES (?, ?, ?, ?, ?);`
 
-  await db.query(sql, [
+  const [result] = await db.query(sql, [
     toMYSQLDate(booking.dateAndTime),
     booking.name,
     booking.email,
     booking.phone,
     booking.comment
   ]);
+
+  return result.insertId;
 }
 
 async function createBooking(newBooking) {
@@ -79,11 +81,12 @@ async function createBooking(newBooking) {
     };
   }
 
-  await saveBooking(newBooking);
+  const bookingID = await saveBooking(newBooking);
 
   return {
     success: true,
-    message: "Your appointment has been accepted."
+    message: "Your appointment has been accepted.",
+    ID: bookingID
   };
 }
 
@@ -132,7 +135,7 @@ app.post("/api/booking", async (req, res) => {
 
   if (result.success) {
     res.json(result);
-    sendMail(req.body.email);
+    sendMail(req.body.email, req.body.name, result.bookingID, toMYSQLDate(toZonedTime(req.body.dateAndTime, "America/Los_Angeles")));
   } else {
     return res.status(409).json(result);
   }
