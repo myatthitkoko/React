@@ -1,6 +1,6 @@
 import express from "express";
 import { randomBytes } from 'crypto';
-import { fromZonedTime, toZonedTime } from "date-fns-tz";
+import { fromZonedTime } from "date-fns-tz";
 import { db } from "./db/connection.js";
 import cors from "cors";
 import { sendMail } from "./emailAPI.js"
@@ -48,19 +48,29 @@ async function readBookings() {
 };
 
 async function saveBooking(booking) {
-  const bookingID = randomBytes(16).toString("base64url");
-  const sql = `INSERT INTO bookings (id, date_and_time, name, email, phone, comment) VALUES (?, ?, ?, ?, ?, ?);`
+  while ('A' === 'A') {
+    const bookingID = randomBytes(8).toString("base64url");
+    
+    try {
+      const sql = `INSERT INTO bookings (id, date_and_time, name, email, phone, comment) VALUES (?, ?, ?, ?, ?, ?);`
 
-  await db.query(sql, [
-    bookingID,
-    toMYSQLDate(booking.dateAndTime),
-    booking.name,
-    booking.email,
-    booking.phone,
-    booking.comment
-  ]);
+      await db.query(sql, [
+        bookingID,
+        toMYSQLDate(booking.dateAndTime),
+        booking.name,
+        booking.email,
+        booking.phone,
+        booking.comment
+      ]);
 
-  return bookingID;
+      return bookingID;
+    } catch (err) {
+      if (err.code === "ER_DUP_ENTRY") {
+        continue;
+      }
+      throw err;
+    }
+  }
 }
 
 async function createBooking(newBooking) {
@@ -135,16 +145,14 @@ app.post("/api/booking", async (req, res) => {
   } = req.body;
 
   const result = await createBooking(req.body);
-  const convertedTime = toZonedTime(req.body.dateAndTime, "America/Los_Angeles");
 
   if (result.success) {
     res.json(result);
-    sendMail(
+    sendMail( 
       req.body.email, 
       req.body.name, 
       result.bookingID, 
-      convertedTime.toDateString(), 
-      convertedTime.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true})
+      req.body.dateAndTime
     );
   } else {
     return res.status(409).json(result);
