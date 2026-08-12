@@ -1,8 +1,10 @@
 import styles from './styles.module.css'
 import { useForm } from "./FormProvider.jsx"
+import { useNavigate } from "react-router-dom";
 
 export default function FormBefore({selectedTimes}) {
     const { name, text, email, phone } = useForm();
+    const navigate = useNavigate();
 
     function sendInfo(e) {
         e.preventDefault();
@@ -21,6 +23,7 @@ export default function FormBefore({selectedTimes}) {
         .then((data) => {
             alert("Your availability has been submitted");
         })
+        navigate("/thanks");
     }
 
     return (

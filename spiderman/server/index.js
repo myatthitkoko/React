@@ -15,10 +15,6 @@ app.use(express.json());
 
 app.use(cors({origin: "https://spider-man-bnd.vercel.app"}));
 
-app.get("/", (req, res) => {
-  res.send("API is running!");
-});
-
 app.post("/api/rsvp", async (req,res) => {
     const { name, datetimes } = req.body;
 
@@ -33,7 +29,6 @@ app.post("/api/rsvp", async (req,res) => {
             [person.insertId, datetime]
         );
     }
-    console.log(req.body);
     res.json({success: true});
 });
 
