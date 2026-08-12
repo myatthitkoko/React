@@ -229,3 +229,15 @@ section {
   display: flex;
   gap: 10px;
 }
+
+.fullscreen {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.fullscreen h1 {
+  color: red;
+}

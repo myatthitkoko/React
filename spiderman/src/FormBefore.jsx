@@ -21,7 +21,7 @@ export default function FormBefore({selectedTimes}) {
         })
         .then((res) => res.json())
         .then((data) => {
-            alert("Your availability has been submitted");
+            alert("Your response has been recorded");
         })
         navigate("/thanks");
     }
