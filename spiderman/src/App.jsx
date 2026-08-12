@@ -10,15 +10,26 @@ import styles from './styles.module.css'
 const days = [ "", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const dates = [ "", "16", "17", "18", "19", "20", "21", "22"];
 const times = ["14:00", "16:00", "18:00", "20:00", "22:00"];
-const slots = [
-  { id: 101, date: "2026-08-19", time: "18:00" },
-  { id: 102, date: "2026-08-19", time: "20:00" },
-];
 
 const hangingSpiderLink = "https://custom-doodle.com/wp-content/uploads/doodle/marvel-spider-man-hanging-upside-down/marvel-spider-man-hanging-upside-down-doodle.gif"
 
 
 function App() {
+  const [selectedTimes, setSelectedTimes] = useState([]);
+
+  const handleTimeChange = (date, time) => {
+    const datetime = `2026-08-${date}T${time}:00`;
+    //unchecking
+    setSelectedTimes((current) => {
+      if (current.includes(datetime)){
+        return current.filter((item) => item !== datetime);
+      }
+
+      return [...current, datetime]
+    });
+  }
+
+  console.log(selectedTimes);
 
   return (
     <>
@@ -28,11 +39,11 @@ function App() {
         </div>
         <div className="title">
           <h1>Spider-Man</h1>
-          <h2 class="red">BRAND NEW DAY</h2>
+          <h2 className="red">BRAND NEW DAY</h2>
           <h3>In Theatres July 31st</h3>
           <div className="instructions">
             <p>
-              Select all the times you're avilable.
+              Check all available times.
             </p>
             <a href="https://www.youtube.com/watch?v=orybDrUj4vA">How does this work?</a>
           </div>
@@ -59,9 +70,18 @@ function App() {
         </div>
         <div className="boxes">
           {times.map(time => (
-            dates.filter(date => date != "").map((date) => (
-              <input type="checkbox" value={`${date}-${time}`}/>
-            ))
+            dates.filter(date => date != "").map((date) => {
+              const datetime = `2026-08-${date}T${time}:00`;
+              return (
+                <input 
+                  type="checkbox" 
+                  key={`${date}-${time}`} 
+                  value={datetime}
+                  checked={selectedTimes.includes(datetime)}
+                  onChange={() => handleTimeChange(date, time)}
+                />
+              );
+            })
           ))}
         </div>
       </div>
@@ -75,6 +95,7 @@ function App() {
                       <FormProvider>
                           <div className={styles.formContent}>
                               <FormBefore 
+                                selectedTimes = {selectedTimes}
                               />
                           </div>
                       </FormProvider>

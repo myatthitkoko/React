@@ -1,30 +1,26 @@
 import styles from './styles.module.css'
 import { useForm } from "./FormProvider.jsx"
 
-export default function FormBefore({}) {
+export default function FormBefore({selectedTimes}) {
     const { name, text, email, phone } = useForm();
 
     function sendInfo(e) {
-        e.preventDefault();/*
-        fetch("https://railway.app/api/booking", {
+        e.preventDefault();
+        fetch("/api/rsvp", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                dateAndTime: slot,
                 name: name.value,
-                email: email.email,
-                phone: phone.phone,
-                comment: text.value
+                comment: text.value,
+                datetimes: selectedTimes
             }),
         })
         .then((res) => res.json())
         .then((data) => {
-            onClose();
-            alert(data.message);
-            refetchAvailability();
-        })*/
+            alert("Your availability has been submitted");
+        })
     }
 
     return (
