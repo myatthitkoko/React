@@ -1,13 +1,34 @@
 import express from "express";
-//import { db } from "./db/connection.js";
 import cors from "cors";
+import mysql from "mysql2/promise";
+
+const db = mysql.createPool({
+  host: process.env.MYSQLHOST,
+  port: process.env.MYSQLPORT,
+  user: process.env.MYSQLUSER,
+  password: process.env.MYSQLPASSWORD,
+  database: process.env.MYSQLDATABASE,
+});
 
 const app = express();
 app.use(express.json());
 
-app.use(cors());
+app.use(cors({origin: "https://spider-man-bnd.vercel.app"}));
 
 app.post("/api/rsvp", async (req,res) => {
+    const { name, datetimes } = req.body;
+
+    const [person] = await db.execute(
+        "INSERT INTO people (name) VALUES (?)",
+        [name]
+    );
+
+    for (const datetime of datetimes) {
+        await db.execute(
+            "INSERT INTO availability (person_id, datetime) VALUES (?, ?)",
+            [person.insertId, datetime]
+        );
+    }
     console.log(req.body);
     res.json({success: true});
 });

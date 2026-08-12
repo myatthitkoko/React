@@ -6,7 +6,7 @@ export default function FormBefore({selectedTimes}) {
 
     function sendInfo(e) {
         e.preventDefault();
-        fetch("/api/rsvp", {
+        await fetch("https://react-production-d69e.up.railway.app/api/rsvp", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
