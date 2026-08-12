@@ -26,13 +26,16 @@ function App() {
         <div className="hero">
           <img src={hangingSpiderLink} className="base" width="170" height="179" alt="" />
         </div>
-        <div>
+        <div className="title">
           <h1>Spider-Man</h1>
-          <h2 class="red">Brand New Day</h2>
+          <h2 class="red">BRAND NEW DAY</h2>
           <h3>In Theatres July 31st</h3>
-          <p>
-            Please select all available time
-          </p>
+          <div className="instructions">
+            <p>
+              Select all the times you're avilable.
+            </p>
+            <a href="https://www.youtube.com/watch?v=orybDrUj4vA">How does this work?</a>
+          </div>
         </div>
 
       </section>
