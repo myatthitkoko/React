@@ -40,7 +40,7 @@ function App() {
         <div className="title">
           <h1>SPIDER-MAN</h1>
           <h2>BRAND NEW DAY</h2>
-          <h3>Join us to see it in theatres together.</h3>
+          <h3>Join us to see it in theatre together.</h3>
         </div>
 
       </section>
