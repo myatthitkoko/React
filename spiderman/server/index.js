@@ -16,11 +16,11 @@ app.use(express.json());
 app.use(cors({origin: "https://spider-man-bnd.vercel.app"}));
 
 app.post("/api/rsvp", async (req,res) => {
-    const { name, datetimes } = req.body;
+    const { name, comment, datetimes } = req.body;
 
     const [person] = await db.execute(
-        "INSERT INTO people (name) VALUES (?)",
-        [name]
+        "INSERT INTO people (name, comments) VALUES (?, ?)",
+        [name, comment]
     );
 
     for (const datetime of datetimes) {

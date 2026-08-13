@@ -25,9 +25,59 @@ section {
   margin-top: 150px;
 }
 
+.title h2 {
+  color: gold;
+}
+
+.title h1 {
+  font-size: 48px;
+  font-weight: 900;
+  font-style: italic;
+  color: #e50914;
+  text-shadow: 2px 2px rgba(57, 9, 229, 0.7);
+}
+
+/*Animation from https://www.w3schools.com/tools/tool_css_animation.php*/
+
+@keyframes swingAnimation {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  20% {
+    transform: translateY(-15px) rotate(15deg);
+  }
+
+  40% {
+    transform: translateY(0) rotate(-10deg);
+  }
+
+  60% {
+    transform: translateY(5px) rotate(5deg);
+  }
+
+  80% {
+    transform: translateY(7px) rotate(-5deg);
+  }
+
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+}
+
+@keyframes entrance {
+  0% { transform: translateY(-150px); }
+  100% { transform: translateY(0);}
+}
+
+.hero img {
+  animation: swingAnimation 5s ease 1s infinite normal both;
+}
+
 .hero {
   position: fixed;
   top: 0;
+  animation: entrance 1s ease-out 0s 1 both;
 
   .base,
   .framework,
@@ -37,7 +87,7 @@ section {
   }
 
   .base {
-    width: 170px;
+    width: 100%;
     position: relative;
     z-index: 0;
   }
@@ -240,4 +290,38 @@ section {
 
 .fullscreen h1 {
   color: red;
+}
+
+.img-container img {
+  width: 100%;
+}
+
+@keyframes slideUpDown {
+  0% {
+    transform: rotate(45deg) translateY(200px);
+  }
+
+  20% {
+    transform: rotate(30deg) translateY(0);
+  }
+
+  50% {
+    transform: rotate(30deg) translateY(0);
+  }
+
+  80% {
+    transform:  rotate(45deg) translateY(30px);
+  }
+
+  100% {
+    transform: rotate(45deg) translateY(200px);
+  }
+}
+
+.fullscreen img {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100px;
+  animation: slideUpDown 10s ease-in-out 3s infinite;
 }

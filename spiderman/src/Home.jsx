@@ -38,14 +38,14 @@ function App() {
           <img src={hangingSpiderLink} className="base" width="170" height="179" alt="" />
         </div>
         <div className="title">
-          <h1>Spider-Man</h1>
-          <h2 className="red">BRAND NEW DAY</h2>
+          <h1>SPIDER-MAN</h1>
+          <h2>BRAND NEW DAY</h2>
           <h3>In Theatres July 31st</h3>
           <div className="instructions">
             <p>
               Check all available times.
             </p>
-            <a href="https://www.youtube.com/watch?v=orybDrUj4vA">How does this work?</a>
+            <a href="https://www.youtube.com/watch?v=orybDrUj4vA" target="_blank">How does this work?</a>
           </div>
         </div>
 
@@ -69,8 +69,8 @@ function App() {
         ))}
         </div>
         <div className="boxes">
-          {times.map(time => (
-            dates.filter(date => date != "").map((date) => {
+          {times.map((time, timeIndex) => (
+            dates.filter(date => date != "").map((date, dateIndex) => {
               const datetime = `2026-08-${date}T${time}:00`;
               return (
                 <input 
@@ -133,6 +133,9 @@ function App() {
               </a>
             </li>
           </ul>
+          <div className='img-container'>
+                    <img src="https://th.bing.com/th/id/R.fbc13f1d0386dd14b4a3999e33e2448c?rik=cpWN9s8Qqi2TDA&riu=http%3a%2f%2fclipart-library.com%2fimages_k%2fsilhouette-of-city-skyline%2fsilhouette-of-city-skyline-3.png&ehk=em1Ikh%2bLydxPYyJDyEsKshZse0D%2fz7EYtlQPiUyuWQo%3d&risl=&pid=ImgRaw&r=0"/>
+                  </div>
         </div>
       </section>
 

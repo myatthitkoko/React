@@ -34,6 +34,11 @@ textarea, .separator input {
     background: midnightblue;
 }
 
+.button:hover {
+    filter: brightness(1.5);
+    transform: translateY(-5px);
+}
+
 .comment p {
   position: absolute;
 }
