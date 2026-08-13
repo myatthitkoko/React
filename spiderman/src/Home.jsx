@@ -40,13 +40,7 @@ function App() {
         <div className="title">
           <h1>SPIDER-MAN</h1>
           <h2>BRAND NEW DAY</h2>
-          <h3>In Theatres July 31st</h3>
-          <div className="instructions">
-            <p>
-              Check all available times.
-            </p>
-            <a href="https://www.youtube.com/watch?v=orybDrUj4vA" target="_blank">How does this work?</a>
-          </div>
+          <h3>Join us to see it in theatres together.</h3>
         </div>
 
       </section>
@@ -84,6 +78,26 @@ function App() {
             })
           ))}
         </div>
+      </div>
+      <h3>Your Availability</h3>
+      <div className='instructions'>
+        <div>
+          <img src="checked.png"/>
+          <label>Available</label>
+        </div>
+        <div>
+          <img src="unchecked.png"/>
+          <label>Not Selected</label>
+        </div>
+      </div>
+      <div>
+        <p className='smaller'>
+          <strong>Click the boxes</strong> for the times you're available.
+        </p>
+        <p>
+          Everyone's availability will be used to determine the screening time.
+        </p>
+        <a href="https://www.youtube.com/watch?v=orybDrUj4vA" target="_blank">How does this work?</a>
       </div>
 
       <section id="next-steps">
