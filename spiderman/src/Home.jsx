@@ -92,7 +92,7 @@ function App() {
       </div>
       <div>
         <p className='smaller'>
-          <strong>Click the boxes</strong> for the times you're available.
+          <strong>Click all the boxes</strong> for the times you're available.
         </p>
         <p>
           Everyone's availability will be used to determine the screening time.
