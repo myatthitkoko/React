@@ -275,6 +275,11 @@ section {
   grid-template-columns: repeat(8, 1fr);
 }
 
+.placeholder {
+  transform: rotate(-90deg);
+}
+
+
 .smaller {
   display: block;
   color: grey;

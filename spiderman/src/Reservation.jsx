@@ -7,11 +7,14 @@ import { FormProvider } from './FormProvider'
 import FormBefore from './FormBefore'
 import styles from './styles.module.css'
 
-const days = [ "", "16", "17", "18", "19", "20", "21", "22"];
+const seats = [ "12", "11", "10", "9", "8", "7", "6", "5"];
 
 const hangingSpiderLink = "https://custom-doodle.com/wp-content/uploads/doodle/marvel-spider-man-hanging-upside-down/marvel-spider-man-hanging-upside-down-doodle.gif"
 
+
 function App() {
+
+  const [selectedSeats, setSelectedSeats] = useState([]);
 
   return (
     <>
@@ -40,11 +43,19 @@ function App() {
             Laser at AMC</li>
         </ul>
         <div className="boxes">
-            {days.map((day) => (
+            {seats.map((seat) => (
+              <div className="container">
+                <p>G{seat}</p>
                 <input 
-                  type="checkbox" 
-                  value={day}
+                  type="radio" 
+                  key={seat}
+                  value={seat}
+                  name="seating"
+                  value={seat}
+                  checked={setSelectedSeats({seat})}
                 />
+                <p className='placeholder'></p>
+              </div>
             ))}
         </div>
       </section>
@@ -58,7 +69,7 @@ function App() {
                       <FormProvider>
                           <div className={styles.formContent}>
                               <FormBefore 
-                                selectedTimes = {1}
+                                selectedSeats = {1}
                               />
                           </div>
                       </FormProvider>
