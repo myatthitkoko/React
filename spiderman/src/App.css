@@ -163,6 +163,11 @@ section {
   }
 }
 
+#center li {
+  margin: 5px;
+  text-align: left;
+}
+
 #next-steps ul {
   list-style: none;
   padding: 0;
@@ -263,6 +268,11 @@ section {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 30px;
+}
+
+#center .boxes {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
 }
 
 .smaller {
