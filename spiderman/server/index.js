@@ -15,6 +15,8 @@ const db = mysql.createPool({
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
+const app = express();
+
 app.post(
     "/api/stripe-webhook",
     express.raw({ type: "application/json" }),
@@ -52,7 +54,6 @@ app.post(
     }
 );
 
-const app = express();
 app.use(express.json());
 
 app.use(cors({origin: "https://spider-man-bnd.vercel.app"}));
