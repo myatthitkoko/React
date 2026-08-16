@@ -19,7 +19,7 @@ function App() {
 
   useEffect(() => {
     async function getData () {        
-      const response = await fetch(`https://react-production-bd8a.up.railway.app/api/reserved/`);
+      const response = await fetch(`https://react-production-d69e.up.railway.app/api/reserved/`);
       const data = await response.json();
       setReservedSeats(data);
     }
