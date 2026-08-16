@@ -80,7 +80,7 @@ function App() {
                   }
                 />
                   {reservation
-                  ? <label htmlFor={seat}> reservation.name </label>
+                  ? <label htmlFor={seat}> {reservation.name} </label>
                   : <label className="openSlot" htmlFor={seat}> RESERVE THIS SEAT </label>}
               </div>
             );
