@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
@@ -14,6 +14,18 @@ const hangingSpiderLink = "https://custom-doodle.com/wp-content/uploads/doodle/m
 
 
 function App() {
+
+  const [reservedSeats, setReservedSeats] = useState([]);
+
+  useEffect(() => {
+    async function getData () {        
+      const response = await fetch(`https://react-production-bd8a.up.railway.app/api/reserved/`);
+      const data = await response.json();
+      setReservedSeats(data);
+    }
+
+    getData();
+  }, []);
 
   const [selectedSeats, setSelectedSeats] = useState("");
   const seatSectionRef = useRef(null);
@@ -49,7 +61,11 @@ function App() {
         <img src="seats.png" />
       <section id="center">
         <div className="placeholder">
-            {seats.map((seat) => (
+            {seats.map((seat) => {
+              const reservation = reservedSeats.find(
+                (reservation) => reservation.seat === seat
+              );
+            return (
               <div className="container" key={seat}>
                 <p>G{seat}</p>
                 <input 
@@ -57,6 +73,7 @@ function App() {
                   id={seat}
                   value={seat}
                   name="seats"
+                  disabled={reservation}
                   checked={selectedSeats === seat}
                   onChange={() => {
                     setSelectedSeats(seat)
@@ -65,10 +82,13 @@ function App() {
                   }
                 />
                 <label htmlFor={seat}>
-                  RESERVE THIS SEAT
+                  {reservation
+                  ? reservation.name
+                  : "RESERVE THIS SEAT"}
                 </label>
               </div>
-            ))}
+            );
+            })}
         </div>
       </section>
 

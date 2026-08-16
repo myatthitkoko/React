@@ -48,7 +48,8 @@ app.post(
             await db.execute(
                 `INSERT INTO reservations
                 (name, seat, stripe_session_id)
-                VALUES (?, ?, ?)`,
+                VALUES (?, ?, ?)
+                ON DUPLICATE KEY UPDATE stripe_session_id = stripe_session_id`,
                 [name, seat, session.id]
             );
         }
@@ -82,6 +83,25 @@ app.post("/api/reserve", async (req, res) => {
     const { name, seat } = req.body;
     console.log("Reservation request:", { name, seat });
 
+    const validSeats = ["05", "06", "07", "08", "09", "10", "11", "12"];
+
+    if (!validSeats.includes(seat)) {
+        return res.status(400).json({
+            error: "Invalid seat."
+        });
+    }
+
+    const [reservations] = await db.query(
+        "SELECT seat FROM reservations WHERE seat = ?",
+        [seat]
+    );
+
+    if (reservations.length > 0) {
+        return res.status(409).json({
+            error: "This seat is already taken."
+        });
+    }
+
     const session = await stripe.checkout.sessions.create({
         mode: "payment",
 
@@ -111,6 +131,11 @@ app.post("/api/reserve", async (req, res) => {
         url: session.url,
     });
 })
+
+app.get("/api/reserved", async (req, res) => {
+    const [reservation] = await db.query("SELECT seat, name FROM reservations");
+    res.json(reservation);
+});
 
 const PORT = process.env.PORT || 3000;
 
