@@ -73,6 +73,7 @@ section {
 .hero img {
   animation: swingAnimation 5s ease 1s infinite normal both;
   aspect-ratio: auto;
+  height: 200px;
 }
 
 .hero {

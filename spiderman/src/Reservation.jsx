@@ -21,7 +21,6 @@ function App() {
     async function getData () {        
       const response = await fetch(`https://react-production-d69e.up.railway.app/api/reserved`);
       const data = await response.json();
-      console.log("Reserved:", data);
       setReservedSeats(data);
     }
 
@@ -30,13 +29,12 @@ function App() {
 
   const [selectedSeats, setSelectedSeats] = useState("");
   const seatSectionRef = useRef(null);
-  console.log(selectedSeats);
 
   return (
     <>
       <section id="center">
         <div className="hero">
-          <img src={hangingSpiderLink} className="base" width="170" height="179" alt="" />
+          <img src={hangingSpiderLink} className="base" alt="" />
         </div>
         <div className="title">
           <h1>SPIDER-MAN</h1>
@@ -64,7 +62,7 @@ function App() {
         <div className="placeholder">
             {seats.map((seat) => {
               const reservation = reservedSeats.find(
-                (reservation) => reservation.seat === seat
+                (reservation) => Number(reservation.seat) === Number(seat)
               );
             return (
               <div className="container" key={seat}>
