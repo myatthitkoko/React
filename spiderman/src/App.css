@@ -275,8 +275,10 @@ section {
   grid-template-columns: repeat(8, 1fr);
 }
 
-.placeholder {
-  transform: rotate(-90deg);
+.container {
+  display: flex;
+  flex-direction: row;
+  
 }
 
 

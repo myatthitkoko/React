@@ -34,9 +34,22 @@ textarea, .separator input {
     background: midnightblue;
 }
 
+.button:disabled {
+    background: grey;
+}
+
 .button:hover {
     filter: brightness(1.5);
     transform: translateY(-5px);
+}
+
+.form p {
+    text-align: justify;
+}
+
+.button:disabled:hover {
+    filter: none;
+    transform: none;
 }
 
 .comment p {

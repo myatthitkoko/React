@@ -4,17 +4,20 @@ import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import './App.css'
 import { FormProvider } from './FormProvider'
-import FormBefore from './FormBefore'
+import FormAfter from './FormAfter'
 import styles from './styles.module.css'
+import { useRef } from 'react';
 
-const seats = [ "12", "11", "10", "9", "8", "7", "6", "5"];
+const seats = [ "12", "11", "10", "09", "08", "07", "06", "05"];
 
 const hangingSpiderLink = "https://custom-doodle.com/wp-content/uploads/doodle/marvel-spider-man-hanging-upside-down/marvel-spider-man-hanging-upside-down-doodle.gif"
 
 
 function App() {
 
-  const [selectedSeats, setSelectedSeats] = useState([]);
+  const [selectedSeats, setSelectedSeats] = useState("");
+  const seatSectionRef = useRef(null);
+  console.log(selectedSeats);
 
   return (
     <>
@@ -42,19 +45,28 @@ function App() {
             AMC Signature Recliners | 
             Laser at AMC</li>
         </ul>
-        <div className="boxes">
+      </section>
+        <img src="seats.png" />
+      <section id="center">
+        <div className="placeholder">
             {seats.map((seat) => (
-              <div className="container">
+              <div className="container" key={seat}>
                 <p>G{seat}</p>
                 <input 
                   type="radio" 
-                  key={seat}
+                  id={seat}
                   value={seat}
-                  name="seating"
-                  value={seat}
-                  checked={setSelectedSeats({seat})}
+                  name="seats"
+                  checked={selectedSeats === seat}
+                  onChange={() => {
+                    setSelectedSeats(seat)
+                    seatSectionRef.current?.scrollIntoView({behavior: "smooth"});
+                    }
+                  }
                 />
-                <p className='placeholder'></p>
+                <label htmlFor={seat}>
+                  RESERVE THIS SEAT
+                </label>
               </div>
             ))}
         </div>
@@ -67,9 +79,9 @@ function App() {
           </svg>
                             <div className={styles.form}>
                       <FormProvider>
-                          <div className={styles.formContent}>
-                              <FormBefore 
-                                selectedSeats = {1}
+                          <div className={styles.formContent} ref={seatSectionRef}>
+                              <FormAfter
+                                selectedSeats = {selectedSeats}
                               />
                           </div>
                       </FormProvider>

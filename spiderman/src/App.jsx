@@ -9,7 +9,7 @@ export default function App() {
   return (
     <>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Reservation />} />
           <Route path="/thanks" element={<Thanks />} />
         </Routes>
     </>

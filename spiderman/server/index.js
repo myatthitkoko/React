@@ -1,6 +1,9 @@
 import express from "express";
 import cors from "cors";
 import mysql from "mysql2/promise";
+import Stripe from 'stripe';
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const db = mysql.createPool({
   host: process.env.MYSQLHOST,
@@ -31,6 +34,39 @@ app.post("/api/rsvp", async (req,res) => {
     }
     res.json({success: true});
 });
+
+app.post("/api/reserve", async (req, res) => {
+    const { name, seat } = req.body;
+
+    const session = await stripe.checkout.sessions.create({
+        mode: "payment",
+
+        line_items: [
+            {
+                price_data: {
+                    currency: "usd",
+                    product_data: {
+                        name: `Spider-Man: Brand New Day - Seat G${seat}`,
+                    },
+                    unit_amount: 1500,
+                },
+                quantity: 1,
+            },
+        ],
+
+        metadata: {
+            name,
+            seat,
+        },
+
+        success_url: "https://spider-man-bnd.vercel.app/thanks",
+        cancel_url: "https://spider-man-bnd.vercel.app",
+    });
+
+    res.json({
+        url: session.url,
+    });
+})
 
 const PORT = process.env.PORT || 3000;
 
