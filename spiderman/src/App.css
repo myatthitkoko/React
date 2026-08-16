@@ -70,51 +70,21 @@ section {
   100% { transform: translateY(0);}
 }
 
-.hero img {
-  animation: swingAnimation 5s ease 1s infinite normal both;
-  aspect-ratio: auto;
-  height: 200px;
-}
-
 .hero {
   position: fixed;
   top: 0;
   animation: entrance 1s ease-out 0s 1 both;
+}
 
-  .base,
-  .framework,
-  .vite {
-    inset-inline: 0;
-    margin: 0 auto;
-  }
-
-  .base {
-    width: 100%;
-    position: relative;
-    z-index: 0;
-  }
-
-  .framework,
-  .vite {
-    position: absolute;
-  }
-
-  .framework {
-    z-index: 1;
-    top: 34px;
-    height: 28px;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg)
-      scale(1.4);
-  }
-
-  .vite {
-    z-index: 0;
-    top: 107px;
-    height: 26px;
-    width: auto;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg)
-      scale(0.8);
-  }
+.hero .base {
+  display: block;
+  height: 150px;
+  width: auto;
+  max-width: none;
+  object-fit: contain;
+  position: relative;
+  z-index: 0;
+  animation: swingAnimation 5s ease 1s infinite normal both;
 }
 
 #center {
@@ -280,7 +250,26 @@ section {
 .container {
   display: flex;
   flex-direction: row;
-  
+  gap: 10px;
+}
+
+.container input{
+  display: none;
+}
+
+.container input:checked ~ label {
+  background: red;
+  color: white;
+}
+
+.openSlot {
+  text-decoration: underline;
+  color: blue;
+}
+
+.openSlot:hover {
+  cursor: pointer;
+  color: red;
 }
 
 

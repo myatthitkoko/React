@@ -40,7 +40,7 @@ export default function FormAfter({selectedSeats}) {
                     </div>
                 </div>
             </div>
-            <p>Please fill out your name for the reservation first. Once you press the Reserve button, you will be redirected to Stripe, a secure third-party payment system where you could make a $15 payment to confirm your reservation. Your name will be shown on the list once the reservation is confirmed.</p>
+            <p>Please fill out your full name for the reservation first. Once you press the Reserve button, you will be redirected to Stripe, a secure third-party payment system where you could make a $15 payment to confirm your reservation. Your name will be shown on the list once the reservation is confirmed.</p>
             <button 
                 type="submit"
                 className={styles.button}

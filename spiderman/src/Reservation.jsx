@@ -12,7 +12,6 @@ const seats = [ "12", "11", "10", "09", "08", "07", "06", "05"];
 
 const hangingSpiderLink = "https://custom-doodle.com/wp-content/uploads/doodle/marvel-spider-man-hanging-upside-down/marvel-spider-man-hanging-upside-down-doodle.gif"
 
-
 function App() {
 
   const [reservedSeats, setReservedSeats] = useState([]);
@@ -80,11 +79,9 @@ function App() {
                     }
                   }
                 />
-                <label htmlFor={seat}>
                   {reservation
-                  ? reservation.name
-                  : "RESERVE THIS SEAT"}
-                </label>
+                  ? <label htmlFor={seat}> reservation.name </label>
+                  : <label className="openSlot" htmlFor={seat}> RESERVE THIS SEAT </label>}
               </div>
             );
             })}
