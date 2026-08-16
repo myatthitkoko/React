@@ -6,7 +6,7 @@ export default function FormAfter({selectedSeats}) {
 
     function sendInfo(e) {
         e.preventDefault();
-        fetch("https://react-production-d69e.up.railway.app/api/reserve", {
+        const response = await fetch("https://react-production-d69e.up.railway.app/api/reserve", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -16,7 +16,9 @@ export default function FormAfter({selectedSeats}) {
                 seat: selectedSeats
             }),
         })
-        .then((res) => res.json())
+        
+        const data = await response.json();
+        window.location.href = data.url;
     }
 
     return (
