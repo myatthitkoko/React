@@ -13,6 +13,45 @@ const db = mysql.createPool({
   database: process.env.MYSQLDATABASE,
 });
 
+const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+app.post(
+    "/api/stripe-webhook",
+    express.raw({ type: "application/json" }),
+    async (req, res) => {
+        const sig = req.headers["stripe-signature"];
+
+        let event;
+
+        try {
+            event = stripe.webhooks.constructEvent(
+                req.body,
+                sig,
+                endpointSecret
+            );
+        } catch (err) {
+            console.error("Webhook signature verification failed:", err.message);
+            return res.sendStatus(400);
+        }
+
+        console.log("Stripe event:", event.type);
+
+        if (event.type === "checkout.session.completed") {
+            const session = event.data.object;
+
+            const name = session.metadata.name;
+            const seat = session.metadata.seat;
+
+            console.log("PAYMENT SUCCESSFUL");
+            console.log("Name:", name);
+            console.log("Seat:", seat);
+            console.log("Session:", session.id);
+        }
+
+        res.json({ received: true });
+    }
+);
+
 const app = express();
 app.use(express.json());
 
