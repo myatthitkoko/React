@@ -49,7 +49,7 @@ app.post(
                 `INSERT INTO reservations
                 (name, seat, stripe_session_id)
                 VALUES (?, ?, ?)`,
-                [session.id, name, seat]
+                [name, seat, session.id]
             );
         }
 
