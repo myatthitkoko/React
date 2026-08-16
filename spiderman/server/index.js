@@ -37,6 +37,7 @@ app.post(
         }
 
         console.log("Stripe event:", event.type);
+        console.log("LIVE MODE:", event.livemode)
 
         if (event.type === "checkout.session.completed") {
             const session = event.data.object;
