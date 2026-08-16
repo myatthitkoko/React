@@ -124,7 +124,7 @@ app.post("/api/reserve", async (req, res) => {
             seat,
         },
 
-        success_url: "https://spider-man-bnd.vercel.app/thanks",
+        success_url: "https://spider-man-bnd.vercel.app/",
         cancel_url: "https://spider-man-bnd.vercel.app",
     });
 
