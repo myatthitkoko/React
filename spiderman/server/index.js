@@ -45,9 +45,12 @@ app.post(
             const seat = session.metadata.seat;
 
             console.log("PAYMENT SUCCESSFUL");
-            console.log("Name:", name);
-            console.log("Seat:", seat);
-            console.log("Session:", session.id);
+            await db.execute(
+                `INSERT INTO reservations
+                (name, seat, stripe_session_id)
+                VALUES (?, ?, ?)`,
+                [session.id, name, seat]
+            );
         }
 
         res.json({ received: true });
