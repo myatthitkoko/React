@@ -37,6 +37,7 @@ app.post("/api/rsvp", async (req,res) => {
 
 app.post("/api/reserve", async (req, res) => {
     const { name, seat } = req.body;
+    console.log("Reservation request:", { name, seat });
 
     const session = await stripe.checkout.sessions.create({
         mode: "payment",
