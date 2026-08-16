@@ -4,7 +4,7 @@ import { useForm } from "./FormProvider.jsx"
 export default function FormAfter({selectedSeats}) {
     const { name } = useForm();
 
-    function sendInfo(e) {
+    async function sendInfo(e) {
         e.preventDefault();
         const response = await fetch("https://react-production-d69e.up.railway.app/api/reserve", {
             method: "POST",
