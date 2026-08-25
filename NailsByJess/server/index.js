@@ -4,6 +4,7 @@ import { fromZonedTime } from "date-fns-tz";
 import { db } from "./db/connection.js";
 import cors from "cors";
 import { sendMail } from "./emailAPI.js"
+import { readCalendarEvents } from "./googleCalendar.js";
 
 const app = express();
 app.use(express.json());
@@ -33,6 +34,32 @@ const overlaps = (slotStart, bookingStart) => {
     && 
     slotEnd > bookingStart //new booking ending later than existing booking start time
   );
+};
+
+const googleOverlaps = (slotStart, event) => {
+  const slotEnd = new Date(
+    slotStart.getTime() + 3 * 60 * 60 * 1000
+  )
+
+  let eventStart;
+  let eventEnd;
+
+  if (event.start?.dateTime && event.end?.dateTime) {
+    eventStart = new Date(event.start.dateTime);
+    eventEnd = new Date(event.end.dateTime);
+  } else if (event.start?.date && event.end?.date) {
+    eventStart = fromZonedTime(
+      `${event.start.date}T00:00:00`, "America/Los_Angeles"
+    );
+    eventEnd = fromZonedTime(
+      `${event.end.date}T00:00:00`, "America/Los_Angeles"
+    );
+  } else {
+    return false;
+  }
+
+  return ( slotStart < eventEnd && slotEnd > eventStart );
+
 };
 
 function toMYSQLDate(date) {
@@ -77,6 +104,7 @@ async function createBooking(newBooking) {
   const bookings = await readBookings();
 
   const newBookingStart = new Date(newBooking.dateAndTime);
+  const newBookingEnd = new Date(newBookingStart.getTime() + 3 * 60 * 60 * 1000);
 
   const alreadyBooked = bookings.some((booking) =>  {
     const existingBookingStart = new Date(booking.date_and_time);
@@ -87,7 +115,19 @@ async function createBooking(newBooking) {
     );
   });
 
-  if (alreadyBooked) {
+  const calendarEvents = await readCalendarEvents(
+    newBookingStart,
+    newBookingEnd
+  );
+
+  const calendarBlock = calendarEvents.some((event) => {
+    return googleOverlaps(
+      newBookingStart,
+      event
+    );
+  });
+
+  if (alreadyBooked || calendarBlock) {
     return {
       success: false,
       message: "This time slot is no longer available."
@@ -112,14 +152,40 @@ app.get("/api/availability/:date", async (req, res) => {
 
   const bookings = await readBookings();
 
-  const availableSlots = possibleSlots.filter(
-      (newSlot)=> { return !bookings.some((booking) =>  {
+  const dayStart = fromZonedTime(
+    `${date}T00:00:00`, "America/Los_Angeles"
+  );
+
+  const dayEnd = fromZonedTime(
+    `${date}T23:59:59`, "America/Los_Angeles"
+  );
+
+  const calendarEvents = await readCalendarEvents(
+    dayStart,
+    dayEnd
+  );
+
+  const availableSlots = possibleSlots.filter((newSlot)=> { 
+      const bookingBlock = bookings.some((booking) =>  {
         const existingBooking = new Date(booking.date_and_time);
         return overlaps(
           newSlot,
           existingBooking,
         );
       });
+
+      if (bookingBlock) {
+        return false;
+      }
+
+      const calendarBlock = calendarEvents.some((event) => {
+        return googleOverlaps(
+          newSlot,
+          event
+        );
+      });
+
+      return !calendarBlock;
   });
 
   res.json(
