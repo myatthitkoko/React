@@ -226,6 +226,34 @@ app.post("/api/booking", async (req, res) => {
 
 });
 
+app.get("/api/google/auth", async (req, res) => {
+    const url = oauth2Client.generateAuthUrl({
+        access_type: "offline",
+        scope: [
+            "https://www.googleapis.com/auth/calendar.readonly"
+        ],
+        prompt: "consent"
+    });
+
+    res.redirect(url);
+});
+
+app.get("/api/google/callback", async (req, res) => {
+    try {
+        const { code } = req.query;
+
+        const { tokens } = await oauth2Client.getToken(code);
+
+        console.log("Google OAuth successful");
+        console.log("Refresh token exists:", Boolean(tokens.refresh_token));
+
+        res.send("Google Calendar connected successfully.");
+    } catch (err) {
+        console.error("Google OAuth failed:", err);
+        res.status(500).send("Google Calendar authorization failed.");
+    }
+});
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, "0.0.0.0", () => {
