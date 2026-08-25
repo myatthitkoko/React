@@ -4,7 +4,7 @@ import { fromZonedTime } from "date-fns-tz";
 import { db } from "./db/connection.js";
 import cors from "cors";
 import { sendMail } from "./emailAPI.js"
-import { readCalendarEvents } from "./googleCalendar.js";
+import { readCalendarEvents, oauth2Client } from "./googleCalendar.js";
 import { google } from "googleapis";
 
 const app = express();
