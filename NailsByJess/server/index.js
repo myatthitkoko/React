@@ -5,10 +5,13 @@ import { db } from "./db/connection.js";
 import cors from "cors";
 import { sendMail } from "./emailAPI.js"
 import { readCalendarEvents, oauth2Client } from "./googleCalendar.js";
-import { google } from "googleapis";
 
 const app = express();
 app.use(express.json());
+
+app.get("/api/test", (req, res) => {
+  res.json({ message: "NEW BACKEND CODE IS RUNNING" });
+});
 
 app.use(cors({origin: "https://jesseniasnailss.vercel.app"}));
 
