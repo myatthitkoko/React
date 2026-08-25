@@ -5,6 +5,7 @@ import { db } from "./db/connection.js";
 import cors from "cors";
 import { sendMail } from "./emailAPI.js"
 import { readCalendarEvents } from "./googleCalendar.js";
+import { google } from "googleapis";
 
 const app = express();
 app.use(express.json());
@@ -226,32 +227,41 @@ app.post("/api/booking", async (req, res) => {
 
 });
 
-app.get("/api/google/auth", async (req, res) => {
-    const url = oauth2Client.generateAuthUrl({
-        access_type: "offline",
-        scope: [
-            "https://www.googleapis.com/auth/calendar.readonly"
-        ],
-        prompt: "consent"
-    });
+app.get("/api/google/auth", (req, res) => {
+  const url = oauth2Client.generateAuthUrl({
+    access_type: "offline",
+    scope: [
+      "https://www.googleapis.com/auth/calendar.readonly"
+    ],
+    prompt: "consent"
+  });
 
-    res.redirect(url);
+  res.redirect(url);
 });
 
 app.get("/api/google/callback", async (req, res) => {
-    try {
-        const { code } = req.query;
+  try {
+    const { code } = req.query;
 
-        const { tokens } = await oauth2Client.getToken(code);
-
-        console.log("Google OAuth successful");
-        console.log("Refresh token exists:", Boolean(tokens.refresh_token));
-
-        res.send("Google Calendar connected successfully.");
-    } catch (err) {
-        console.error("Google OAuth failed:", err);
-        res.status(500).send("Google Calendar authorization failed.");
+    if (!code) {
+      return res.status(400).send("No authorization code received.");
     }
+
+    const { tokens } = await oauth2Client.getToken(code);
+
+    console.log(
+      "OAuth successful. Refresh token received:",
+      Boolean(tokens.refresh_token)
+    );
+
+    // TEMPORARY:
+    console.log("REFRESH TOKEN:", tokens.refresh_token);
+
+    res.send("Google Calendar connected successfully. Check Railway logs.");
+  } catch (err) {
+    console.error("Google OAuth failed:", err);
+    res.status(500).send("Google Calendar authorization failed.");
+  }
 });
 
 const PORT = process.env.PORT || 3000;
