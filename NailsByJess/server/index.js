@@ -231,6 +231,9 @@ app.post("/api/booking", async (req, res) => {
 });
 
 app.get("/api/google/auth", (req, res) => {
+  console.log("GOOGLE CLIENT ID:", process.env.GOOGLE_CLIENT_ID);
+  console.log("GOOGLE REDIRECT URI:", process.env.GOOGLE_REDIRECT_URI);
+
   const url = oauth2Client.generateAuthUrl({
     access_type: "offline",
     scope: [
@@ -238,6 +241,8 @@ app.get("/api/google/auth", (req, res) => {
     ],
     prompt: "consent"
   });
+
+  console.log("GOOGLE AUTH URL:", url);
 
   res.redirect(url);
 });
