@@ -26,6 +26,10 @@ export default function CalendarSection() {
 
   const { availability, loading, error, refetchAvailability } = useFetchAvailability(selected);
 
+  if (availability?.length > 0) {
+    setStep(2);
+  }
+
   return (
     <>
         <aside className={styles.progress}>
@@ -57,11 +61,6 @@ export default function CalendarSection() {
                     onDateChange={(newDate) => {
                         setDate(newDate);
                         setSlot("");
-                        if (availability.length > 0) { 
-                            setStep(2);
-                        } else {
-                            setStep(1);
-                        }
 
                         /*if (window.innerWidth < 800) {
                             dateSectionRef.current?.scrollIntoView({
@@ -106,6 +105,7 @@ export default function CalendarSection() {
                             className={styles.slotButton} 
                             onClick={() => {
                                 setOpenForm(true);
+                                setStep(3);
                                 window.scrollTo({
                                 top: 0,
                                 behavior: "smooth",
