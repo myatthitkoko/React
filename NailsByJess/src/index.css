@@ -4,6 +4,7 @@
   --cream: #FFE4EB;
   --rose: #FFADC2;
   --deep: #2E000B;
+  --highlight: #ED003B;
   --shadow: rgba(128, 0, 32, .15);
 }
 
@@ -99,7 +100,7 @@ a {
 
 .columns {
   display: flex;
-  gap: 30px;
+  gap: 80px;
 }
 
 .blueLink {
@@ -121,7 +122,7 @@ a {
 @media (min-width: 800px) {
   .footer-group {
     display: flex;
-    gap: 30px;
+    gap: 150px;
   }
 
   footer {

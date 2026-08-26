@@ -99,10 +99,44 @@
     width: 100%;
 }
 
+.content > ul > li:nth-child(odd) {
+        margin: 30px 0;
+}
+
+.block {
+    background: white;
+    padding: 30px;
+    border-radius: 30px;
+}
+
+hr {
+    background: var(--highlight);
+    height: 3px;
+}
+
+.price {
+    display: flex;
+    justify-content: space-between;
+}
+
 @media (min-width: 800px) {
     .posts {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
+    }
+
+    .blocks {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+    }
+
+    .block {
+        min-height: 363px;
+    }
+
+    .content > ul > li:nth-child(odd) {
+        margin: 0;
     }
 
     .content {

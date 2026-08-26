@@ -10,6 +10,7 @@ export default function Header() {
 
     return (
         <>
+            <div className="pattern"></div>
             <footer>
                 <h2>Nails By Jess</h2>
                 <div className="footer-group">
@@ -34,11 +35,10 @@ export default function Header() {
                     <div>
                         <h2>Get In Touch</h2>
                         <p><a href="mailto:jesseniasnailss@gmail.com">jesseniasnailss@gmail.com</a></p>
+                        <p></p>
                     </div>
                 </div>
             </footer>
-            <div className="pattern">
-            </div>
         </>
     )
 }

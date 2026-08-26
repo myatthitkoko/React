@@ -1,10 +1,6 @@
 import styles from '../styleSheets/Services.module.css'
 import InstagramEmbed from '../components/InstagramEmbed.jsx'
 
-const nails = [
-    "Press Ons", "Gel Manicure", "Acrylic Illusions", "Cursive Writing", "Short Nails"
-]
-
 const featured = [
     "featured1.png", "featured2.png", "featured3.png"
 ]
@@ -13,21 +9,73 @@ const pressed = [
     "press1.png", "press2.png", "press3.png"
 ]
 
+const categories = [
+    "Acrylic, Gel X Services", "Manicure Services", "Add ons", "Fullset", "Extras"
+]
+
+const Acrylic = [
+  { type: "Short Length", price: 55, currency: "$"},
+  { type: "Medium Length", price: 65, currency: "$" },
+  { type: "Long Length", price: 75, currency: "$" },
+  { type: "X Long Length", price: 85, currency: "$" },
+  { type: "XX Long Length", price: 95, currency: "$" }
+];
+
+const Manicure = [
+  { type: "Get Manicure", price: 45, currency: "$" },
+  { type: "Extension on Single Nail", price: 3, currency: "$" }
+];
+
+const AddOns = [
+    { type: "Stickers", price: 3, sign: "+", currency: "$" },
+    { type: "Rhinestones", price: 3, sign: "+", currency: "$" },
+    { type: "Custom Gel Design", price: 4, sign: "+", currency: "$" },
+    { type: "Encapsulation", price: 4, sign: "+", currency: "$" },
+    { type: "Swarovski Crystals", sign: "TBD" },
+    { type: "3D Design", price: 3, sign: "+", currency: "$" },
+    { type: "Isolated Chrome", price: 3, sign: "+", currency: "$" }
+];
+
+const Fullset = [
+    { type: "French Tip", price: 20, currency: "$" },
+    { type: "Cat Eye French Tip", price: 40, currency: "$" },
+    { type: "Ombre", price: 25, currency: "$" },
+    { type: "Chrome", price: 25, currency: "$" },
+];
+
+const Extras = [
+    { type: "Nail Repair", price: 5, currency: "$" },
+    { type: "Soak Off", price: 20, currency: "$" },
+    { type: "Nail Fills", sign: "Unavailable" },
+];
+
+const listMap = {
+    "Acrylic, Gel X Services": Acrylic,
+    "Manicure Services": Manicure,
+    "Add ons": AddOns,
+    "Fullset": Fullset,
+    "Extras": Extras
+};
+
+
 export default function Services() {
     return (
         <div className={styles.main}>
             <div className={styles.content}>
-                <h2 className="title">Services</h2>
-                <section className={styles.nailGroup}>
-                    <div className={styles.banners}>
-                        {nails.map((nail, i) => (
-                            <button className={`${styles.nails} ${styles[`nail${i}`]}`} key={nail}>{nail}</button>
-                        ))}
-                    </div>
-                    <div className={styles.text}>
-                        <p>A curated blend of artistry and technique as well as everything from effortless at‑home sets to sculpted enhancements and delicate hand‑painted details are offered to my clients. Whether you prefer the simplicity of short nails or the drama of acrylic designs, each service is crafted with intention, precision, and a signature touch that makes every set feel uniquely yours.</p>
-                    </div>
-                </section>
+                <h2 className="title">Pricelist</h2>
+                <ul className={styles.blocks}>
+                    {categories.map((title) => (
+                        <li className={styles.block}><strong>{title}</strong>
+                            <hr/>
+                            <ul>
+                                {listMap[title].map((service) => (
+                                    <li className={styles.price}>{service.type}<span>{service.currency}{service.price}{service.sign}</span></li>
+                                ))}
+                            </ul>
+                        </li>
+                    ))}
+                </ul>
+
                 <h2 className="title">Featured Works</h2>
                 <div className={styles.posts}>
                     {featured.map((photo) => (

@@ -5,7 +5,7 @@ export default function DatePicker({date, onDateChange}) {
     const today = new Date();
     today.setHours(0,0,0,0);
     return (
-        <>
+        <div>
             <h2 className={styles.title}>Get started by selecting a date</h2>
             <Calendar 
                 minDetail="month"
@@ -24,6 +24,6 @@ export default function DatePicker({date, onDateChange}) {
                 <span className="bold">Selected Date:</span>{' '}
                 {date.toDateString()}
             </p>
-        </>
+        </div>
     );
 }

@@ -36,9 +36,12 @@ export default function CalendarSection() {
                     onDateChange={(newDate) => {
                         setDate(newDate);
                         setSlot("");
-                        dateSectionRef.current?.scrollIntoView({
-                        behavior: "smooth"
-                        });
+
+                        /*if (window.innerWidth < 800) {
+                            dateSectionRef.current?.scrollIntoView({
+                            behavior: "smooth"
+                            });
+                        }*/
                     }} 
                 />
                 { loading ? 
@@ -65,9 +68,11 @@ export default function CalendarSection() {
                             slot = {slot}
                             onSlotSelect={(value) => {
                                         setSlot(value);
-                                        timeSectionRef.current?.scrollIntoView({
-                                        behavior: "smooth"
-                                        });
+                                        /*if (window.innerWidth < 800) {
+                                            timeSectionRef.current?.scrollIntoView({
+                                            behavior: "smooth"
+                                            });
+                                        }*/
                                     }}
                         />
                         <button 
