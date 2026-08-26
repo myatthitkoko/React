@@ -48,7 +48,7 @@ export default function CalendarSection() {
                 selected = {selected}
                 date = {date}
                 refetchAvailability = {refetchAvailability}
-                onClose = {() => setOpenForm(false)}
+                onClose = {() => {setOpenForm(false); setStep(2);}}
             />
         :
             <div className={styles.content}>
@@ -59,6 +59,8 @@ export default function CalendarSection() {
                         setSlot("");
                         if (availability.length > 0) { 
                             setStep(2);
+                        } else {
+                            setStep(1);
                         }
 
                         /*if (window.innerWidth < 800) {
@@ -92,7 +94,6 @@ export default function CalendarSection() {
                             slot = {slot}
                             onSlotSelect={(value) => {
                                         setSlot(value);
-                                        setStep(3);
                                         /*if (window.innerWidth < 800) {
                                             timeSectionRef.current?.scrollIntoView({
                                             behavior: "smooth"
