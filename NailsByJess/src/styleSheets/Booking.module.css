@@ -83,6 +83,72 @@
   }
 }
 
+/*
+<aside className={styles.progress}>
+                    {steps.map((label, index) => {
+                        const stepNumber = index + 1;
+                        return (
+                            <div className={`${styles.step} ${stepNumber <= step ? styles.active : ""}`} key={label}>
+                                <div className={styles.circle}>
+                                    {stepNumber}
+                                </div>
+                                <span>{label}</span>
+                            </div>
+                        )
+                    })}
+        </aside>
+*/
+
+aside {
+  display: flex;
+  justify-content: space-evenly;
+  margin: 30px auto;
+}
+
+.step {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.circle {
+  background: grey;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--deep);
+  z-index: 5;
+}
+
+.step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    width: 100%;
+    height: 2px;
+    background: grey;
+    z-index: 1;
+}
+
+.step.active {
+    color: var(--highlight);
+}
+
+.step.active .circle {
+    background: var(--highlight);
+    color: var(--cream);
+}
+
+.step.active:not(:last-child)::after {
+    background: var(--highlight);
+}
+
 .main {
   min-height: 100vh;
   overflow: hidden;

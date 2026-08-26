@@ -10,6 +10,14 @@ export default function CalendarSection() {
   const [date, setDate] = useState(new Date());
   const [slot, setSlot] = useState("");
   const [openForm, setOpenForm] = useState(false);
+  const [step, setStep] = useState(1);
+
+  const steps = [
+    "Date",
+    "Time",
+    "Info",
+    "Deposit"
+  ]
 
   const dateSectionRef = useRef(null);
   const timeSectionRef = useRef(null);
@@ -20,6 +28,19 @@ export default function CalendarSection() {
 
   return (
     <>
+        <aside className={styles.progress}>
+                    {steps.map((label, index) => {
+                        const stepNumber = index + 1;
+                        return (
+                            <div className={`${styles.step} ${stepNumber <= step ? styles.active : ""}`} key={label}>
+                                <div className={styles.circle}>
+                                    {stepNumber}
+                                </div>
+                                <span>{label}</span>
+                            </div>
+                        )
+                    })}
+        </aside>
         {openForm ? 
             <BookingForm 
                 open = {openForm}
@@ -36,6 +57,9 @@ export default function CalendarSection() {
                     onDateChange={(newDate) => {
                         setDate(newDate);
                         setSlot("");
+                        if (availability.length > 0) { 
+                            setStep(2);
+                        }
 
                         /*if (window.innerWidth < 800) {
                             dateSectionRef.current?.scrollIntoView({
@@ -68,6 +92,7 @@ export default function CalendarSection() {
                             slot = {slot}
                             onSlotSelect={(value) => {
                                         setSlot(value);
+                                        setStep(3);
                                         /*if (window.innerWidth < 800) {
                                             timeSectionRef.current?.scrollIntoView({
                                             behavior: "smooth"

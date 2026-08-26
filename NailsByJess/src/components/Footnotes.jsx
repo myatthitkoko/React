@@ -35,7 +35,7 @@ export default function Header() {
                     <div>
                         <h2>Get In Touch</h2>
                         <p><a href="mailto:jesseniasnailss@gmail.com">jesseniasnailss@gmail.com</a></p>
-                        <p></p>
+                        <p>Instagram: <a href="https://www.instagram.com/jesseniasnailss/">@jesseniasnailss</a></p>
                     </div>
                 </div>
             </footer>
