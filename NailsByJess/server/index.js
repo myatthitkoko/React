@@ -218,7 +218,7 @@ app.post("/api/booking", async (req, res) => {
       req.body.email, 
       req.body.name, 
       result.bookingID, 
-      req.body.dateAndTime
+      new Date(req.body.dateAndTime)
     );
   } else {
     return res.status(409).json(result);
