@@ -26,9 +26,11 @@ export default function CalendarSection() {
 
   const { availability, loading, error, refetchAvailability } = useFetchAvailability(selected);
 
-  if (availability?.length > 0) {
-    setStep(2);
-  }
+  useEffect(() => {
+    if (availability?.length > 0) {
+        setStep(2);
+    }
+  }, [availability])
 
   return (
     <>
@@ -61,6 +63,7 @@ export default function CalendarSection() {
                     onDateChange={(newDate) => {
                         setDate(newDate);
                         setSlot("");
+                        setStep(1);
 
                         /*if (window.innerWidth < 800) {
                             dateSectionRef.current?.scrollIntoView({
