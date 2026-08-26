@@ -26,7 +26,7 @@ export default function Hero() {
                     <source src="/NailVid1.mp4" type="video/mp4" />
                 </video>
                 <div className={styles.overlay}>
-                    <h2 className={styles.title}>Luxury at your fingertips</h2>
+                    <h2 className={styles.title}>Luxury at Your Fingertips</h2>
                     <div className={styles.Summary}>
                         <div className={styles.buttons}>
                             <Link to="/services" className={`${styles.button} secondary`}>

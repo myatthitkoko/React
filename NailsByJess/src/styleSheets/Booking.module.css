@@ -28,12 +28,12 @@
   border-radius: 100px;
   margin: 30px auto;
   border-radius: 15px;
-  background: var(--highlight);
-  color: var(--cream);
+  background: var(--cream);
+  color: var(--deep);
 }
 
-.timeSlots label {
-  margin: 15px 0px;
+.timeSlots input {
+  margin: 20px 0px;
 }
 
 .exit img {
