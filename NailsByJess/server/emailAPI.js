@@ -18,6 +18,7 @@ export async function sendMail(destination, name, ID, dateAndTime) {
         .send({
         from: 'Nails By Jess <no-reply@myatthitkoko.com>',
         to: destination,
+        cc: 'jesseniasnailss@gmail.com',
         subject: 'Nail Appointment Confirmation',
         html: MailTemplate({
             name, 
