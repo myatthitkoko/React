@@ -10,7 +10,7 @@ oauth2Client.setCredentials({
     refresh_token: process.env.GOOGLE_REFRESH_TOKEN
 });
 
-const calendar = google.calendar({
+export const calendar = google.calendar({
     version: "v3",
     auth: oauth2Client
 });

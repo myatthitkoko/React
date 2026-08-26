@@ -2,6 +2,7 @@ import { Resend } from 'resend';
 import { toZonedTime, format } from "date-fns-tz";
 import dotenv from "dotenv";
 import { MailTemplate } from "./MailTemplate.js"
+import { calendar } from "googleCalendar.js"
 
 dotenv.config();
 
