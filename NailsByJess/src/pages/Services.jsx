@@ -1,5 +1,6 @@
 import styles from '../styleSheets/Services.module.css'
 import InstagramEmbed from '../components/InstagramEmbed.jsx'
+import { Link } from "react-router-dom";
 
 const featured = [
     "featured1.png", "featured2.png", "featured3.png"
@@ -65,7 +66,8 @@ export default function Services() {
                 <h2 className="title">Pricelist</h2>
                 <ul className={styles.blocks}>
                     {categories.map((title) => (
-                        <li className={styles.block}><strong>{title}</strong>
+                        <li className={styles.block}>
+                            <h2 className={styles.title}>{title}</h2>
                             <hr/>
                             <ul>
                                 {listMap[title].map((service) => (
@@ -75,6 +77,7 @@ export default function Services() {
                         </li>
                     ))}
                 </ul>
+                <Link to="/booking" className={`${styles.bookNow} primary`}>Schedule an Appointment</Link>
 
                 <h2 className="title">Featured Works</h2>
                 <div className={styles.posts}>

@@ -101,12 +101,43 @@
 
 .content > ul > li:nth-child(odd) {
         margin: 30px 0;
+        
 }
 
 .block {
     background: white;
     padding: 30px;
     border-radius: 30px;
+}
+
+.title {
+    font-family: "Great Vibes", cursive;
+    font-size: 24pt;
+    margin: 0;
+}
+
+.bookNow {
+    width: 300px;
+    height: 70px;
+    border-radius: 100px;
+    font-size: 14pt;
+    transition: transform 0.5s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 30px auto 100px auto;
+}
+
+.bookNow:hover {
+    transform: scale(0.9);
+    filter: brightness(0.8);
+}
+
+.bookNow {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1;
 }
 
 hr {
@@ -132,7 +163,7 @@ hr {
     }
 
     .block {
-        min-height: 363px;
+        min-height: 400px;
     }
 
     .content > ul > li:nth-child(odd) {

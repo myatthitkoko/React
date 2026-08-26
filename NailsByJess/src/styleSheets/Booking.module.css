@@ -23,11 +23,17 @@
 }
 
 .slotButton {
-  height: 30px;
-  width: 100%;
+  width: 300px;
+  height: 70px;
+  border-radius: 100px;
+  margin: 30px auto;
   border-radius: 15px;
-  background: var(--color2);
-  color: white;
+  background: var(--highlight);
+  color: var(--cream);
+}
+
+.timeSlots label {
+  margin: 15px 0px;
 }
 
 .exit img {
@@ -82,22 +88,6 @@
     transform: translateY(0);
   }
 }
-
-/*
-<aside className={styles.progress}>
-                    {steps.map((label, index) => {
-                        const stepNumber = index + 1;
-                        return (
-                            <div className={`${styles.step} ${stepNumber <= step ? styles.active : ""}`} key={label}>
-                                <div className={styles.circle}>
-                                    {stepNumber}
-                                </div>
-                                <span>{label}</span>
-                            </div>
-                        )
-                    })}
-        </aside>
-*/
 
 aside {
   display: flex;
