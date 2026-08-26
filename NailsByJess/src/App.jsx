@@ -4,6 +4,7 @@ import HomePage from './pages/Home'
 import BookingPage from './pages/Booking'
 import ServicePage from './pages/Services'
 import Header from './components/Header'
+import Footer from './components/Footnotes'
 import NotFound from './components/NotFound';
 import { useEffect } from 'react';
 
@@ -27,6 +28,8 @@ function App() {
         <Route path="/services" element={<ServicePage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <Footer />
+
     </>
   )
 }

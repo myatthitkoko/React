@@ -24,6 +24,7 @@
     height: 100%;
     position: absolute;
     width: 100%;
+    flex-direction: column;
 }
 
 .overlay h2 {
@@ -65,12 +66,33 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+    z-index: 1;
+}
+
+.posts {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin: 50px auto;
 }
 
 @media (min-width: 800px) {
 
     .overlay h2 {
         font-size: 40pt;
+        margin: 0 auto;
+    }
+
+    .Welcome {
+        display: flex;
+        align-items: center;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .posts {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
     }
 
     .buttons {
@@ -81,6 +103,10 @@
     .Summary {
         margin: 50px auto;
         max-width: 750px;
+    }
+
+    .Summary p {
+        padding: 30px;
     }
 
     .Summary button {

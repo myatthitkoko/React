@@ -1,5 +1,6 @@
 import styles from '../styleSheets/Home.module.css'
 import { useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 
 export default function Hero() {
     const videoRef = useRef(null);
@@ -26,6 +27,17 @@ export default function Hero() {
                 </video>
                 <div className={styles.overlay}>
                     <h2 className={styles.title}>Luxury at your fingertips</h2>
+                    <div className={styles.Summary}>
+                        <div className={styles.buttons}>
+                            <Link to="/services" className={`${styles.button} secondary`}>
+                                View Services
+                            </Link>
+
+                            <Link to="/booking" className={`${styles.button} primary`}>
+                                Schedule an Appointment →
+                            </Link>
+                        </div>
+                    </div>
                 </div>
             </div>
         </>

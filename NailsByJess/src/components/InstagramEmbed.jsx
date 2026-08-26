@@ -29,7 +29,7 @@ export default function InstagramEmbed({URL}) {
         className="instagram-media"
         data-instgrm-permalink={URL}
         data-instgrm-version="14"
-        data-instgrm-captioned
+        /*data-instgrm-captioned*/
         >
             <a href={URL}>
                 View this post on Instagram
