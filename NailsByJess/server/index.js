@@ -9,7 +9,7 @@ import { oauth2Client, readCalendarEvents } from "./googleCalendar.js";
 const app = express();
 app.use(express.json());
 
-app.use(cors({origin: "https://jesseniasnailss.vercel.app"}));
+app.use(cors({origin: "https://jesseniasnailss.com"}));
 
 const generateSlots = (openHour, closeHour, date) => {
   const slots = [];
