@@ -36,7 +36,7 @@ export async function sendMail(destination, name, ID, dateAndTime) {
     try {
         const result = await resend.emails
         .send({
-        from: 'Nails By Jess <no-reply@myatthitkoko.com>',
+        from: 'Nails By Jess <no-reply@jesseniasnailss.com>',
         to: destination,
         bcc: 'jesseniasnailss@gmail.com',
         subject: 'Nail Appointment Confirmation',
