@@ -28,8 +28,8 @@
   border-radius: 100px;
   margin: 30px auto;
   border-radius: 15px;
-  background: var(--cream);
-  color: var(--deep);
+  background: var(--color2);
+  color: var(--cream);
 }
 
 .timeSlots label {
@@ -40,8 +40,9 @@
 
 .timeSlots {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  max-width: 300px;
 }
 
 .exit img {
@@ -281,7 +282,7 @@ textarea {
 
 .timeSlots input {
       display: none;
-    }
+}
 
 .timeSlots input:checked + label {
   border: var(--color2) solid 1px;
