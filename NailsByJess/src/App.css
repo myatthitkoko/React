@@ -113,8 +113,8 @@ abbr[title] {
 }
 
 .react-calendar__month-view__weekdays__weekday abbr {
-  background:#f4c6da;
-  color: var(--color2);
+  background: var(--color1);
+  color: white;
   border-radius: 50%;
   height: 40px;
   width: 40px;

@@ -105,7 +105,7 @@ export default function CalendarSection() {
                         />
                         <button 
                             disabled={!slot} 
-                            className={styles.slotButton} 
+                            className={`${styles.button} primary`}
                             onClick={() => {
                                 setOpenForm(true);
                                 setStep(3);

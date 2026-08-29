@@ -6,6 +6,7 @@
   --deep: #2E000B;
   --highlight: #ED003B;
   --shadow: rgba(128, 0, 32, .15);
+  --luxRouge: linear-gradient(135deg, #6E1F3A, #A65D72, #E3C1C9);
 }
 
 h1 {
@@ -58,6 +59,7 @@ footer {
   background-color: #800020;
   color: var(--cream);
   padding: 50px;
+  z-index: 1;
 }
 
 .pattern {
