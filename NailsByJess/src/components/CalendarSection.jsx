@@ -38,9 +38,9 @@ export default function CalendarSection() {
                     {steps.map((label, index) => {
                         const stepNumber = index + 1;
                         return (
-                            <div className={`${styles.step} ${stepNumber <= step ? styles.active : ""}`} key={label}>
+                            <div className={`${styles.step} ${stepNumber < step ? styles.active : ""} ${stepNumber === step ? styles.current : ""}`} key={label}>
                                 <div className={styles.circle}>
-                                    {stepNumber}
+                                    <div className={styles.num}></div>
                                 </div>
                                 <span>{label}</span>
                             </div>
