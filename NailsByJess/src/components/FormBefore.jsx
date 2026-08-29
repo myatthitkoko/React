@@ -18,7 +18,7 @@ export default function FormBefore({onClose, selected, slot, refetchAvailability
                 name: name.value,
                 email: email.email,
                 phone: phone.phone,
-                comment: text.value
+                comment: "disabled"
             }),
         })
         .then((res) => res.json())
@@ -59,7 +59,7 @@ export default function FormBefore({onClose, selected, slot, refetchAvailability
                         />
                     </div>
                 </div>
-                <div className={styles.comment}>
+                {/*<div className={styles.comment}>
                     <textarea
                         value={text.value}
                         onChange={(a)=>text.setValue(a.target.value)}
@@ -71,14 +71,14 @@ export default function FormBefore({onClose, selected, slot, refetchAvailability
                         id='Comment'
                     />
                     <p>{`${text.value.length}/2048`}</p>
-                </div>
+                </div>*/}
             </div>
             <button 
                 type="submit"
-                className={styles.button}
-                disabled={email.emailWarning !== "" || phone.phoneWarning !== ""}
+                className={`${styles.button} primary`}
+                disabled={email.emailWarning !== "" || phone.phoneWarning !== "" || email.email  === "" || name.name === ""}
             >
-                Make a Deposit
+                Confirm with Deposit
             </button>
         </form>
     )

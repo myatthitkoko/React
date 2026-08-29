@@ -6,16 +6,16 @@ export default function TimeSlots({availability, slot, onSlotSelect}) {
             <h2>Available Time Slots</h2> 
             <p>Please select a time slot to continue</p>
             {availability.map((timeObject) => (
-                <div className='timeSlots' key={timeObject.value}>
-                    <label>
-                        <input 
-                        type='radio' 
-                        name='time' 
-                        id={timeObject.display} 
-                        value={timeObject.value} 
-                        checked = {slot === timeObject.value}
-                        onChange={() => onSlotSelect(timeObject.value)}
-                        />
+                <div className={styles.timeSlots} key={timeObject.value}>
+                    <input 
+                    type='radio' 
+                    name='time' 
+                    id={timeObject.display} 
+                    value={timeObject.value} 
+                    checked = {slot === timeObject.value}
+                    onChange={() => onSlotSelect(timeObject.value)}
+                    />
+                    <label htmlFor={timeObject.display}>
                         {timeObject.display}
                     </label>
                 </div>

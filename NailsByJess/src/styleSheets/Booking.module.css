@@ -32,8 +32,16 @@
   color: var(--deep);
 }
 
-.timeSlots input {
-  margin: 20px 0px;
+.timeSlots label {
+  background: var(--cream);
+  border-radius: 15px;
+  padding: 8px;
+}
+
+.timeSlots {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
 }
 
 .exit img {
@@ -50,10 +58,6 @@
   display: flex;
 }
 
-.formContent {
-  margin-bottom: 500px;
-}
-
 .messageExit {
   background: none;
   border: none;
@@ -61,12 +65,24 @@
   font-size: 12pt;
 }
 
+.form {
+    width: 100%;
+    height: 100%;
+    background: var(--color1);
+    border-radius: 30px 30px 0px 0px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .formWrapper {
     position: absolute;
     display: flex;
     align-items: center;
     flex-direction: column;
-    width: 100vw;;
+    width: 100%;
+    height: 100%;
     z-index: 100;
     transform: scale(1, 0);
     transform-origin: bottom;
@@ -140,25 +156,13 @@ aside {
 }
 
 .main {
-  min-height: 100vh;
-  overflow: hidden;
   background: linear-gradient(
     160deg,
     #fff8fc 0%,
     #fce8f2 45%,
     #f4c6da 100%
   );
-}
-
-.form {
-    width: 100%;
-    height: 100%;
-    background: var(--color1);
-    border-radius: 30px 30px 0px 0px;
-    padding: 30px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  padding-bottom: 30px;
 }
 
 .warning {
@@ -178,19 +182,24 @@ aside {
     width: 100%;
     font-size: 16pt;
     line-height: 2;
-    border-radius: 40px;
+    border-radius: 10px;
     padding: 0px 10px;
+    border: none;
 }
 
 .button {
   background: var(--color2);
   font-size: 16px;
-  color: #eeeeee;
+  color: var(--cream);
   transition: transform 0.5s ease;
-  height: 30px;
-  width: 100%;
+  height: 50px;
+  width: 300px;
   border-radius: 15px;
   margin: 20px auto;
+  transition: transform 0.5s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 :disabled {
@@ -217,7 +226,7 @@ aside {
   color: var(--deep);
   border-radius: 30px;
   padding: 30px;
-  margin: 30px auto;
+  margin: 30px auto 0;
 }
 
 .noSlots {
@@ -227,7 +236,7 @@ aside {
   color: var(--cream);
   border-radius: 30px;
   padding: 30px;
-  margin: 30px auto;
+  margin: 30px auto 0;
 }
 
 .receivedData {
@@ -270,6 +279,15 @@ textarea {
     text-align: justify;
 }
 
+.timeSlots input {
+      display: none;
+    }
+
+.timeSlots input:checked + label {
+  border: var(--color2) solid 1px;
+  color: var(--color2);
+}
+
 @media (min-width: 800px) {
     .content {
         max-width: 1200px;
@@ -293,9 +311,8 @@ textarea {
     }
 
     .formWrapper {
+        position: relative;
         width: 100%;
-        position: fixed;
-        height: 100vh;
     }
 
     .comment {
@@ -308,5 +325,19 @@ textarea {
 
     .formContent {
       margin-bottom: 0px;
+    }
+
+    .timeSlots label:hover {
+      box-shadow: 5px 5px 5px grey;
+    }
+
+    .button:hover {
+      transform: scale(0.9);
+      filter: brightness(0.8);
+    }
+
+    .main {
+      padding: 0;
+      flex: 1;
     }
 }

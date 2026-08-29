@@ -26,10 +26,16 @@ h1 {
   color: var(--deep)
 }
 
-body, html {
+body, html, #root {
   margin: 0;
   padding: 0;
   font-family: "Cormorant Garamond", serif;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 header {
@@ -48,7 +54,7 @@ header {
   color: white;
 }
 
-Footer {
+footer {
   background-color: #800020;
   color: var(--cream);
   padding: 50px;
