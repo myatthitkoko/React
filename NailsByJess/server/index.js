@@ -1,12 +1,118 @@
 import express from "express";
 import { randomBytes } from 'crypto';
-import { fromZonedTime } from "date-fns-tz";
+import { toZonedTime, fromZonedTime } from "date-fns-tz";
+import { format } from "date-fns";
 import { db } from "./db/connection.js";
 import cors from "cors";
 import { sendMail } from "./emailAPI.js"
 import { oauth2Client, readCalendarEvents } from "./googleCalendar.js";
+import Stripe from 'stripe';
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+const TIME_ZONE = "America/Los_Angeles";
 
 const app = express();
+
+app.post(
+  "/api/stripe-webhook",
+  express.raw({ type: "application/json" }),
+  async (req, res) => {
+    const sig = req.headers["stripe-signature"];
+
+    let event;
+
+    try {
+      event = stripe.webhooks.constructEvent(
+        req.body,
+        sig,
+        endpointSecret
+      );
+    } catch (err) {
+      console.error(
+        "Webhook signature verification failed:",
+        err.message
+      );
+
+      return res.sendStatus(400);
+    }
+
+    console.log("Stripe event:", event.type);
+    console.log("LIVE MODE:", event.livemode);
+
+    try {
+      if (event.type === "checkout.session.completed") {
+        const session = event.data.object;
+
+        const {
+          bookingID,
+          dateAndTime,
+          name,
+          email,
+          phone,
+          comment,
+        } = session.metadata || {};
+
+        if (!bookingID || !dateAndTime || !name || !email) {
+          console.error(
+            "Missing booking information in Stripe metadata"
+          );
+
+          return res.sendStatus(400);
+        }
+
+        console.log("PAYMENT SUCCESSFUL");
+        console.log("Booking ID:", bookingID);
+
+        await db.execute(
+          `
+          INSERT INTO bookings
+            (
+              id,
+              date_and_time,
+              name,
+              email,
+              phone,
+              comment,
+              stripe_session_id
+            )
+          VALUES (?, ?, ?, ?, ?, ?, ?)
+          ON DUPLICATE KEY UPDATE
+            stripe_session_id = VALUES(stripe_session_id)
+          `,
+          [
+            bookingID,
+            toMYSQLDate(dateAndTime),
+            name,
+            email,
+            phone,
+            comment,
+            session.id,
+          ]
+        );
+
+        await sendMail(
+          email,
+          name,
+          bookingID,
+          new Date(dateAndTime)
+        );
+      }
+
+      res.json({ received: true });
+    } catch (err) {
+      console.error(
+        "Stripe webhook processing failed:",
+        err
+      );
+
+      res.sendStatus(500);
+    }
+  }
+);
+
 app.use(express.json());
 
 app.use(cors({origin: "https://jesseniasnailss.com"}));
@@ -74,33 +180,7 @@ async function readBookings() {
   return rows;
 };
 
-async function saveBooking(booking) {
-  while ('A' === 'A') {
-    const bookingID = randomBytes(8).toString("base64url");
-    
-    try {
-      const sql = `INSERT INTO bookings (id, date_and_time, name, email, phone, comment) VALUES (?, ?, ?, ?, ?, ?);`
-
-      await db.query(sql, [
-        bookingID,
-        toMYSQLDate(booking.dateAndTime),
-        booking.name,
-        booking.email,
-        booking.phone,
-        booking.comment
-      ]);
-
-      return bookingID;
-    } catch (err) {
-      if (err.code === "ER_DUP_ENTRY") {
-        continue;
-      }
-      throw err;
-    }
-  }
-}
-
-async function createBooking(newBooking) {
+async function checkBooking(newBooking) {
   const bookings = await readBookings();
 
   const newBookingStart = new Date(newBooking.dateAndTime);
@@ -134,13 +214,10 @@ async function createBooking(newBooking) {
     };
   }
 
-  const bookingID = await saveBooking(newBooking);
 
   return {
-    success: true,
-    message: "Your appointment has been accepted.",
-    bookingID: bookingID
-  };
+    success: true
+  }
 }
 
 app.get("/api/availability/:date", async (req, res) => {
@@ -201,30 +278,99 @@ app.get("/api/availability/:date", async (req, res) => {
 
 });
 
-app.post("/api/booking", async (req, res) => {
-  const {
-    dateAndTime,
-    name,
-    email,
-    phone,
-    comment
-  } = req.body;
+app.post(
+  "/api/booking",
+  async (req, res) => {
+    try {
+      const {
+        dateAndTime,
+        name,
+        email,
+        phone,
+        comment,
+      } = req.body;
 
-  const result = await createBooking(req.body);
+      const result =
+        await checkBooking(req.body);
 
-  if (result.success) {
-    res.json(result);
-    sendMail( 
-      req.body.email, 
-      req.body.name, 
-      result.bookingID, 
-      new Date(req.body.dateAndTime)
-    );
-  } else {
-    return res.status(409).json(result);
+      if (!result.success) {
+        return res.status(409).json(result);
+      }
+
+      const bookingID =
+        randomBytes(8).toString("base64url");
+
+      const zonedDate = toZonedTime(
+        dateAndTime,
+        TIME_ZONE
+      );
+
+      const date = format(
+        zonedDate,
+        "EEEE, MMMM d, yyyy"
+      );
+
+      const time = format(
+        zonedDate,
+        "h:mm a"
+      );
+
+      const session =
+        await stripe.checkout.sessions.create({
+          mode: "payment",
+
+          line_items: [
+            {
+              price_data: {
+                currency: "usd",
+
+                product_data: {
+                  name:
+                    `Nails By Jess - Appointment on ${date} at ${time}`,
+                },
+
+                unit_amount: 2000,
+              },
+
+              quantity: 1,
+            },
+          ],
+
+          metadata: {
+            bookingID,
+            dateAndTime,
+            name,
+            email,
+            phone: phone || "",
+            comment: comment || "",
+          },
+
+          success_url:
+            "https://mydomain.com/success",
+
+          cancel_url:
+            "https://mydomain.com/try-again",
+        });
+
+      return res.json({
+        success: true,
+        bookingID,
+        url: session.url,
+      });
+    } catch (err) {
+      console.error(
+        "Booking creation failed:",
+        err
+      );
+
+      return res.status(500).json({
+        success: false,
+        message:
+          "Unable to create booking.",
+      });
+    }
   }
-
-});
+);
 
 /*One-Time Authorization for Refresh Token
 app.get("/api/google/auth", (req, res) => {
