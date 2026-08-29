@@ -346,10 +346,10 @@ app.post(
           },
 
           success_url:
-            "https://mydomain.com/success",
+            "https://jesseniasnailss.com/booking",
 
           cancel_url:
-            "https://mydomain.com/try-again",
+            "https://jesseniasnailss.com/booking",
         });
 
       return res.json({
