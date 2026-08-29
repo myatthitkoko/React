@@ -285,7 +285,7 @@ textarea {
 
 .timeSlots input:checked + label {
   border: var(--color2) solid 1px;
-  color: var(--color2);
+  box-shadow: 5px 5px 5px var(--deep);
 }
 
 @media (min-width: 800px) {
