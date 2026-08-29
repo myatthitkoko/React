@@ -226,7 +226,7 @@ app.post("/api/booking", async (req, res) => {
 
 });
 
-/*One-Time Authorization for Refresh Token*/
+/*One-Time Authorization for Refresh Token
 app.get("/api/google/auth", (req, res) => {
   console.log("GOOGLE CLIENT ID:", process.env.GOOGLE_CLIENT_ID);
   console.log("GOOGLE REDIRECT URI:", process.env.GOOGLE_REDIRECT_URI);
@@ -268,7 +268,7 @@ app.get("/api/google/callback", async (req, res) => {
     res.status(500).send("Google Calendar authorization failed.");
   }
 });
-
+*/
 
 const PORT = process.env.PORT || 3000;
 
