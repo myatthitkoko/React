@@ -6,9 +6,9 @@ import { useForm } from "./FormProvider.jsx"
 export default function FormBefore({onClose, selected, slot, refetchAvailability}) {
     const { name, text, email, phone } = useForm();
 
-    function sendInfo(e) {
+    async function sendInfo(e) {
         e.preventDefault();
-        fetch("https://react-production-bd8a.up.railway.app/api/booking", {
+        const response = await fetch("https://react-production-bd8a.up.railway.app/api/booking", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -18,16 +18,14 @@ export default function FormBefore({onClose, selected, slot, refetchAvailability
                 name: name.value,
                 email: email.email,
                 phone: phone.phone,
-                comment: "disabled"
+                comment: "disabled",
             }),
         })
-        .then((res) => res.json())
-        .then((data) => {
-            onClose();
-            alert(data.message);
-            refetchAvailability();
-        })
+        
+        const data = await response.json();
+        window.location.href = data.url;
     }
+
 
     return (
         <form onSubmit={sendInfo}>
