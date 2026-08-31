@@ -19,7 +19,7 @@ export default function SuccessPage() {
 
         async function getBooking() {
             const response = await fetch (
-                `/api/booking/success?session_id=${encodeURIComponent(sessionID)}`
+                `https://react-production-bd8a.up.railway.app/api/booking/success?session_id=${encodeURIComponent(sessionID)}`
             );
 
             const data = await response.json();
