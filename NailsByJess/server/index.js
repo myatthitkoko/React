@@ -290,11 +290,11 @@ app.post("/api/booking", async (req, res) => {
         newBookingStart.getTime() + 3 * 60 * 60 * 1000
     );
 
-    await db.beginTransaction();
+    const connection = await db.getConnection();
 
     try {
-
-        const [rows] = await db.execute(
+        await connection.beginTransaction();
+        const [rows] = await connection.execute(
             `
             SELECT *
             FROM bookings
@@ -313,7 +313,7 @@ app.post("/api/booking", async (req, res) => {
         );
 
         if (rows.length > 0) {
-            await db.rollback();
+            await connection.rollback();
 
             return res.status(409).json({
                 success: false,
@@ -323,7 +323,7 @@ app.post("/api/booking", async (req, res) => {
 
         const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
 
-        await db.execute(
+        await connection.execute(
             `
             INSERT INTO bookings
             (
@@ -352,12 +352,13 @@ app.post("/api/booking", async (req, res) => {
             ]
         );
 
-        await db.commit();
+        await connection.commit();
 
     } catch (err) {
-
-        await db.rollback();
+        await connection.rollback();
         throw err;
+    } finally {
+      connection.release();
     }
 
     const zonedDate = toZonedTime(

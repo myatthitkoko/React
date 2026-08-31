@@ -19,7 +19,7 @@ export default function BookingForm( {open, slot, selected, date, onClose, refet
                         slot = {slot}
                         refetchAvailability = {refetchAvailability}
                         />
-                        <p>After clicking the button, the page will be redirected to a third party payment system where you could make a $20 deposit to complete your reservation.</p>
+                        <p>After clicking the button, the page will be redirected to Stripe, a third-party payment system, where you could make a $20 deposit to complete your reservation. During the payment process, your selected slot will remain on hold for 15 minutes. For cancellations and refunds, you must directly reach out to Jess as soon as possible. </p>
                     </div>
                 </FormProvider>
             </div>
