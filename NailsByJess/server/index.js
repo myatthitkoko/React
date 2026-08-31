@@ -301,6 +301,13 @@ app.post("/api/booking", async (req, res) => {
 
     try {
         await connection.beginTransaction();
+        console.log({
+          dateAndTime,
+          newBookingStart: newBookingStart.toString(),
+          newBookingStartTime: newBookingStart.getTime(),
+          newBookingEnd: newBookingEnd.toString(),
+          newBookingEndTime: newBookingEnd.getTime()
+        });
         const [rows] = await connection.execute(
             `
             SELECT *
