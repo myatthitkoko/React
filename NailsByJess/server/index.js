@@ -77,6 +77,10 @@ app.post(
 
       const booking = await readRow(bookingID);
 
+      if (!booking) {
+        return res.sendStatus(500); 
+      }
+
       if (!booking.mailed) {
         await sendMail(
           booking.email,
@@ -176,6 +180,7 @@ async function readActiveBookings() {
     FROM bookings
     WHERE
       paid = true
+      OR (paid = false AND expires_at > NOW())
   `);
 
   return rows;
