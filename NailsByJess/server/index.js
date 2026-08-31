@@ -48,60 +48,55 @@ app.post(
 
         const {
           bookingID,
-          dateAndTime,
-          name,
-          email,
-          phone,
-          comment,
         } = session.metadata || {};
 
-        if (!bookingID || !dateAndTime || !name || !email) {
+        if (!bookingID) {
           console.error(
-            "Missing booking information in Stripe metadata"
+            "Missing booking ID in Stripe metadata"
           );
 
           return res.sendStatus(400);
         }
 
         console.log("PAYMENT SUCCESSFUL");
-        console.log("Booking ID:", bookingID);
 
-        await db.execute(
+        const [result] = await db.execute(
           `
-          INSERT INTO bookings
-            (
-              id,
-              date_and_time,
-              name,
-              email,
-              phone,
-              comment,
-              stripe_session_id
-            )
-          VALUES (?, ?, ?, ?, ?, ?, ?)
-          ON DUPLICATE KEY UPDATE
-            stripe_session_id = VALUES(stripe_session_id)
+          UPDATE bookings
+          SET
+            paid = true,
+            stripe_session_id = ?
+          WHERE id = ?
+            AND paid = false
           `,
           [
-            bookingID,
-            toMYSQLDate(dateAndTime),
-            name,
-            email,
-            phone,
-            comment,
             session.id,
+            bookingID
           ]
         );
 
+      const booking = await readRow(bookingID);
+
+      if (!booking.mailed) {
         await sendMail(
-          email,
-          name,
+          booking.email,
+          booking.name,
           bookingID,
-          new Date(dateAndTime)
+          new Date(booking.date_and_time)
+        );
+        await db.execute(
+          `
+          UPDATE bookings
+          SET mailed = true
+          WHERE id = ?
+          `,
+          [bookingID]
         );
       }
+    }
 
       res.json({ received: true });
+
     } catch (err) {
       console.error(
         "Stripe webhook processing failed:",
@@ -176,7 +171,7 @@ function toMYSQLDate(date) {
 }
 
 async function readBookings() {
-  const [rows] = await db.query("SELECT * FROM bookings");
+  const [rows] = await db.query("SELECT * FROM bookings WHERE paid = true");
   return rows;
 };
 
@@ -278,29 +273,94 @@ app.get("/api/availability/:date", async (req, res) => {
 
 });
 
-app.post(
-  "/api/booking",
-  async (req, res) => {
-    try {
-      const {
+app.post("/api/booking", async (req, res) => {
+    const {
         dateAndTime,
         name,
         email,
         phone,
-        comment,
-      } = req.body;
+        comment
+    } = req.body;
 
-      const result =
-        await checkBooking(req.body);
+    const bookingID = randomBytes(8).toString("base64url");
 
-      if (!result.success) {
-        return res.status(409).json(result);
-      }
+    const newBookingStart = new Date(dateAndTime);
 
-      const bookingID =
-        randomBytes(8).toString("base64url");
+    const newBookingEnd = new Date(
+        newBookingStart.getTime() + 3 * 60 * 60 * 1000
+    );
 
-      const zonedDate = toZonedTime(
+    await db.beginTransaction();
+
+    try {
+
+        const [rows] = await db.execute(
+            `
+            SELECT *
+            FROM bookings
+            WHERE date_and_time < ?
+              AND DATE_ADD(date_and_time, INTERVAL 3 HOUR) > ?
+              AND (
+                  paid = true
+                  OR (paid = false AND expires_at > NOW())
+              )
+            FOR UPDATE
+            `,
+            [
+                toMYSQLDate(newBookingEnd),
+                toMYSQLDate(newBookingStart)
+            ]
+        );
+
+        if (rows.length > 0) {
+            await db.rollback();
+
+            return res.status(409).json({
+                success: false,
+                message: "This time slot is currently on hold by another active user."
+            });
+        }
+
+        const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
+
+        await db.execute(
+            `
+            INSERT INTO bookings
+            (
+                id,
+                date_and_time,
+                name,
+                email,
+                phone,
+                comment,
+                paid,
+                expires_at,
+                mailed
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            `,
+            [
+                bookingID,
+                toMYSQLDate(newBookingStart),
+                name,
+                email,
+                phone || "",
+                comment || "",
+                false,
+                expiresAt,
+                false
+            ]
+        );
+
+        await db.commit();
+
+    } catch (err) {
+
+        await db.rollback();
+        throw err;
+    }
+
+    const zonedDate = toZonedTime(
         dateAndTime,
         TIME_ZONE
       );
@@ -315,62 +375,78 @@ app.post(
         "h:mm a"
       );
 
-      const session =
-        await stripe.checkout.sessions.create({
-          mode: "payment",
+    const session = await stripe.checkout.sessions.create({
+        mode: "payment",
 
-          line_items: [
+        line_items: [
             {
-              price_data: {
-                currency: "usd",
+                price_data: {
+                    currency: "usd",
 
-                product_data: {
-                  name:
-                    `Nails By Jess - Appointment on ${date} at ${time}`,
+                    product_data: {
+                      name:
+                        `Nails By Jess - Appointment on ${date} at ${time}`,
+                    },
+
+                    unit_amount: 2000
                 },
 
-                unit_amount: 2000,
-              },
+                quantity: 1
+            }
+        ],
 
-              quantity: 1,
-            },
-          ],
+        metadata: {
+            bookingID
+        },
 
-          metadata: {
-            bookingID,
-            dateAndTime,
-            name,
-            email,
-            phone: phone || "",
-            comment: comment || "",
-          },
-
-          success_url:
+        success_url:
             "https://jesseniasnailss.com/booking-success?session_id={CHECKOUT_SESSION_ID}",
 
-          cancel_url:
-            "https://jesseniasnailss.com/try-again",
-        });
+        cancel_url:
+            "https://jesseniasnailss.com/try-again"
+    });
 
-      return res.json({
+    await db.execute(
+        `
+        UPDATE bookings
+        SET stripe_session_id = ?
+        WHERE id = ?
+        `,
+        [session.id, bookingID]
+    );
+
+    return res.json({
         success: true,
         bookingID,
-        url: session.url,
-      });
-    } catch (err) {
-      console.error(
-        "Booking creation failed:",
-        err
-      );
+        url: session.url
+    });
+});
 
-      return res.status(500).json({
-        success: false,
-        message:
-          "Unable to create booking.",
-      });
-    }
+async function readRow(bookingID) {
+  const [bookingRows] = await db.execute(
+    `
+    SELECT
+      id,
+      date_and_time,
+      name,
+      email,
+      phone,
+      comment,
+      paid,
+      mailed
+    FROM bookings
+    WHERE id = ?
+    `,
+    [bookingID]
+  );
+
+  if (bookingRows.length === 0) {
+    return null;
   }
-);
+
+  return bookingRows[0];
+}
+
 
 app.get("/api/booking/success", async (req, res) => {
   const { session_id } = req.query;
@@ -385,23 +461,18 @@ app.get("/api/booking/success", async (req, res) => {
     return res.status(400).send("No payment received.");
   }
 
-  const {
-    bookingID,
-    dateAndTime,
-    name,
-    email,
-    phone,
-    comment
-  } = session.metadata;
+  const { bookingID } = session.metadata || {};
+
+  const booking = await readRow(bookingID);
 
   return res.json({
     success: true,
-    bookingID,
-    dateAndTime,
-    name,
-    email,
-    phone,
-    comment
+    bookingID: booking.id,
+    dateAndTime: booking.date_and_time,
+    name: booking.name,
+    email: booking.email,
+    phone: booking.phone,
+    comment: booking.comment
   });
 });
 

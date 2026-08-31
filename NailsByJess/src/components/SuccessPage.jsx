@@ -39,9 +39,14 @@ export default function SuccessPage() {
 
     if (loading) {
         return (
-            <div>
-                <p>Loading your booking...</p>
-            </div>
+            <section className={styles.page}>
+                <div className={styles.rectangle}>
+                    <div className={styles.imgContainer}>
+                        <img src="https://media.tenor.com/G7LfW0O5qb8AAAAi/loading-gif.gif" alt="loading gif" />
+                    </div>
+                    <h1>Loading your appointment...</h1>
+                </div>
+            </section>
         );
     }
 
