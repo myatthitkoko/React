@@ -23,7 +23,16 @@ export default function FormBefore({onClose, selected, slot, refetchAvailability
         })
         
         const data = await response.json();
-        window.location.href = data.url;
+        if (response.status === 409) {
+            alert(data.message || "This time slot is no longer available.");
+            await refetchAvailability();
+            onClose();
+            return;
+        }
+        if (data.success && data.url) {
+            window.location.href = data.url;
+            return;
+        }
     }
 
 
