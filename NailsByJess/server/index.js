@@ -75,7 +75,7 @@ app.post(
           ]
         );
 
-      const booking = await readRow(bookingID);
+      const booking = await readRowWithRetry(bookingID);
 
       if (!booking) {
         return res.sendStatus(500); 
@@ -115,6 +115,25 @@ app.post(
 app.use(express.json());
 
 app.use(cors({origin: "https://jesseniasnailss.com"}));
+
+async function readRowWithRetry(bookingID, attempts = 5, delay = 500) {
+  for (let i = 0; i < attempts; i++) {
+
+    const booking = await readRow(bookingID);
+
+    if (booking) {
+      return booking;
+    }
+
+    if (i < attempts - 1) {
+      await new Promise(resolve =>
+        setTimeout(resolve, delay)
+      );
+    }
+  }
+
+  return null;
+}
 
 const generateSlots = (openHour, closeHour, date) => {
   const slots = [];
