@@ -163,25 +163,6 @@ const googleOverlaps = (slotStart, event) => {
 
 };
 
-function toMYSQLDate(date) {
-  return new Date(date)
-  .toISOString()
-  .slice(0, 19)
-  .replace("T", " ");
-}
-
-async function readActiveBookings() {
-  const [rows] = await db.query(`
-    SELECT *
-    FROM bookings
-    WHERE
-      paid = true
-      OR (paid = false AND expires_at > NOW())
-  `);
-
-  return rows;
-};
-
 async function checkBooking(newBooking) {
   const bookings = await readActiveBookings();
 
@@ -280,161 +261,679 @@ app.get("/api/availability/:date", async (req, res) => {
 
 });
 
-app.post("/api/booking", async (req, res) => {
-  console.log("========== /api/booking ==========");
-    console.log("BODY:", JSON.stringify(req.body, null, 2));
+function toMYSQLDate(value, label, requestID) {
+  console.log(`[${requestID}] >>> toMYSQLDate START: ${label}`);
+  console.log(`[${requestID}] ${label} raw value:`, value);
+  console.log(`[${requestID}] ${label} type:`, typeof value);
 
-    const {
-        dateAndTime,
+  let parsedDate;
+
+  try {
+    parsedDate = new Date(value);
+  } catch (err) {
+    console.error(`[${requestID}] !!! new Date() THREW for ${label}`);
+    console.error(`[${requestID}]`, err);
+    throw err;
+  }
+
+  console.log(
+    `[${requestID}] ${label} parsed:`,
+    parsedDate.toString()
+  );
+
+  const timestamp = parsedDate.getTime();
+
+  console.log(
+    `[${requestID}] ${label} timestamp:`,
+    timestamp
+  );
+
+  if (Number.isNaN(timestamp)) {
+    console.error(
+      `[${requestID}] !!! INVALID DATE: ${label}`
+    );
+
+    throw new Error(
+      `INVALID DATE in toMYSQLDate: ${label}. ` +
+      `value=${JSON.stringify(value)}, ` +
+      `type=${typeof value}`
+    );
+  }
+
+  const mysqlDate = parsedDate
+    .toISOString()
+    .slice(0, 19)
+    .replace("T", " ");
+
+  console.log(
+    `[${requestID}] ${label} MYSQL:`,
+    mysqlDate
+  );
+
+  console.log(`[${requestID}] <<< toMYSQLDate END: ${label}`);
+
+  return mysqlDate;
+}
+
+
+app.post("/api/booking", async (req, res) => {
+
+  const requestID = randomBytes(4).toString("hex");
+
+  console.log("");
+  console.log("========================================");
+  console.log(`[${requestID}] BOOKING REQUEST START`);
+  console.log("========================================");
+
+  console.log(`[${requestID}] BODY:`);
+  console.log(JSON.stringify(req.body, null, 2));
+
+  const {
+    dateAndTime,
+    name,
+    email,
+    phone,
+    comment
+  } = req.body;
+
+
+  /*
+  --------------------------------------------------
+  STEP 1 — INPUT
+  --------------------------------------------------
+  */
+
+  console.log(`[${requestID}] STEP 1: INPUT`);
+
+  console.log(
+    `[${requestID}] dateAndTime:`,
+    dateAndTime
+  );
+
+  console.log(
+    `[${requestID}] dateAndTime type:`,
+    typeof dateAndTime
+  );
+
+
+  /*
+  --------------------------------------------------
+  STEP 2 — CREATE DATES
+  --------------------------------------------------
+  */
+
+  console.log(`[${requestID}] STEP 2: CREATE DATES`);
+
+  const newBookingStart = new Date(dateAndTime);
+
+  console.log(
+    `[${requestID}] newBookingStart:`,
+    newBookingStart.toString()
+  );
+
+  console.log(
+    `[${requestID}] newBookingStart timestamp:`,
+    newBookingStart.getTime()
+  );
+
+  if (Number.isNaN(newBookingStart.getTime())) {
+    console.error(
+      `[${requestID}] !!! newBookingStart IS INVALID`
+    );
+
+    return res.status(400).json({
+      success: false,
+      message: "Invalid booking date."
+    });
+  }
+
+
+  const newBookingEnd = new Date(
+    newBookingStart.getTime() +
+    3 * 60 * 60 * 1000
+  );
+
+  console.log(
+    `[${requestID}] newBookingEnd:`,
+    newBookingEnd.toString()
+  );
+
+  console.log(
+    `[${requestID}] newBookingEnd timestamp:`,
+    newBookingEnd.getTime()
+  );
+
+  if (Number.isNaN(newBookingEnd.getTime())) {
+    console.error(
+      `[${requestID}] !!! newBookingEnd IS INVALID`
+    );
+
+    return res.status(400).json({
+      success: false,
+      message: "Invalid booking end time."
+    });
+  }
+
+
+  /*
+  --------------------------------------------------
+  STEP 3 — MYSQL DATE CONVERSION
+  --------------------------------------------------
+  */
+
+  console.log(`[${requestID}] STEP 3: MYSQL DATE CONVERSION`);
+
+  let mysqlBookingStart;
+  let mysqlBookingEnd;
+
+  try {
+
+    mysqlBookingStart = toMYSQLDate(
+      newBookingStart,
+      "newBookingStart",
+      requestID
+    );
+
+    mysqlBookingEnd = toMYSQLDate(
+      newBookingEnd,
+      "newBookingEnd",
+      requestID
+    );
+
+  } catch (err) {
+
+    console.error(
+      `[${requestID}] !!! STEP 3 FAILED`
+    );
+
+    console.error(err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Date conversion failed.",
+      requestID
+    });
+  }
+
+
+  /*
+  --------------------------------------------------
+  STEP 4 — DATABASE CONNECTION
+  --------------------------------------------------
+  */
+
+  console.log(`[${requestID}] STEP 4: GET DATABASE CONNECTION`);
+
+  let connection;
+
+  try {
+
+    connection = await db.getConnection();
+
+    console.log(
+      `[${requestID}] DATABASE CONNECTION SUCCESS`
+    );
+
+  } catch (err) {
+
+    console.error(
+      `[${requestID}] !!! DATABASE CONNECTION FAILED`
+    );
+
+    console.error(err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Database connection failed.",
+      requestID
+    });
+  }
+
+
+  try {
+
+    /*
+    --------------------------------------------------
+    STEP 5 — BEGIN TRANSACTION
+    --------------------------------------------------
+    */
+
+    console.log(`[${requestID}] STEP 5: BEGIN TRANSACTION`);
+
+    await connection.beginTransaction();
+
+    console.log(
+      `[${requestID}] TRANSACTION STARTED`
+    );
+
+
+    /*
+    --------------------------------------------------
+    STEP 6 — CHECK OVERLAPPING BOOKINGS
+    --------------------------------------------------
+    */
+
+    console.log(
+      `[${requestID}] STEP 6: CHECK DATABASE OVERLAP`
+    );
+
+    console.log(
+      `[${requestID}] SQL PARAM 1 mysqlBookingEnd:`,
+      mysqlBookingEnd
+    );
+
+    console.log(
+      `[${requestID}] SQL PARAM 2 mysqlBookingStart:`,
+      mysqlBookingStart
+    );
+
+
+    const [rows] = await connection.execute(
+      `
+      SELECT *
+      FROM bookings
+      WHERE date_and_time < ?
+        AND DATE_ADD(date_and_time, INTERVAL 3 HOUR) > ?
+        AND (
+            paid = true
+            OR (paid = false AND expires_at > NOW())
+        )
+      FOR UPDATE
+      `,
+      [
+        mysqlBookingEnd,
+        mysqlBookingStart
+      ]
+    );
+
+
+    console.log(
+      `[${requestID}] OVERLAP QUERY SUCCESS`
+    );
+
+    console.log(
+      `[${requestID}] OVERLAPPING ROWS:`,
+      rows.length
+    );
+
+
+    if (rows.length > 0) {
+
+      console.log(
+        `[${requestID}] BOOKING BLOCKED — SLOT OCCUPIED`
+      );
+
+      await connection.rollback();
+
+      return res.status(409).json({
+        success: false,
+        message:
+          "This time slot is currently on hold by another active user.",
+        requestID
+      });
+    }
+
+
+    /*
+    --------------------------------------------------
+    STEP 7 — CREATE EXPIRATION
+    --------------------------------------------------
+    */
+
+    console.log(
+      `[${requestID}] STEP 7: CREATE EXPIRATION`
+    );
+
+    const expiresAt = new Date(
+      Date.now() + 15 * 60 * 1000
+    );
+
+    console.log(
+      `[${requestID}] expiresAt:`,
+      expiresAt.toString()
+    );
+
+    console.log(
+      `[${requestID}] expiresAt timestamp:`,
+      expiresAt.getTime()
+    );
+
+    if (Number.isNaN(expiresAt.getTime())) {
+
+      throw new Error(
+        "expiresAt unexpectedly became invalid"
+      );
+    }
+
+
+    /*
+    --------------------------------------------------
+    STEP 8 — INSERT BOOKING
+    --------------------------------------------------
+    */
+
+    console.log(
+      `[${requestID}] STEP 8: INSERT BOOKING`
+    );
+
+    console.log(
+      `[${requestID}] bookingID:`,
+      bookingID
+    );
+
+    console.log(
+      `[${requestID}] INSERT date:`,
+      mysqlBookingStart
+    );
+
+    console.log(
+      `[${requestID}] INSERT expiresAt:`,
+      expiresAt
+    );
+
+
+    await connection.execute(
+      `
+      INSERT INTO bookings
+      (
+        id,
+        date_and_time,
         name,
         email,
         phone,
-        comment
-    } = req.body;
-
-    console.log("dateAndTime:", dateAndTime);
-    console.log("dateAndTime type:", typeof dateAndTime);
-
-
-    const bookingID = randomBytes(8).toString("base64url");
-
-    const newBookingStart = new Date(dateAndTime);
-
-    const newBookingEnd = new Date(
-        newBookingStart.getTime() + 3 * 60 * 60 * 1000
+        comment,
+        paid,
+        expires_at,
+        mailed
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `,
+      [
+        bookingID,
+        mysqlBookingStart,
+        name,
+        email,
+        phone || "",
+        comment || "",
+        false,
+        expiresAt,
+        false
+      ]
     );
 
-    const connection = await db.getConnection();
+
+    console.log(
+      `[${requestID}] INSERT SUCCESS`
+    );
+
+
+    /*
+    --------------------------------------------------
+    STEP 9 — COMMIT
+    --------------------------------------------------
+    */
+
+    console.log(
+      `[${requestID}] STEP 9: COMMIT`
+    );
+
+    await connection.commit();
+
+    console.log(
+      `[${requestID}] COMMIT SUCCESS`
+    );
+
+  } catch (err) {
+
+    console.error("");
+    console.error(
+      `[${requestID}] !!! DATABASE SECTION FAILED`
+    );
+    console.error(
+      `[${requestID}] ERROR:`,
+      err
+    );
+    console.error(
+      `[${requestID}] STACK:`,
+      err.stack
+    );
 
     try {
-        await connection.beginTransaction();
-        const [rows] = await connection.execute(
-            `
-            SELECT *
-            FROM bookings
-            WHERE date_and_time < ?
-              AND DATE_ADD(date_and_time, INTERVAL 3 HOUR) > ?
-              AND (
-                  paid = true
-                  OR (paid = false AND expires_at > NOW())
-              )
-            FOR UPDATE
-            `,
-            [
-                toMYSQLDate(newBookingEnd),
-                toMYSQLDate(newBookingStart)
-            ]
-        );
+      await connection.rollback();
 
-        if (rows.length > 0) {
-            await connection.rollback();
+      console.log(
+        `[${requestID}] ROLLBACK SUCCESS`
+      );
 
-            return res.status(409).json({
-                success: false,
-                message: "This time slot is currently on hold by another active user."
-            });
-        }
+    } catch (rollbackError) {
 
-        const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
-
-        await connection.execute(
-            `
-            INSERT INTO bookings
-            (
-                id,
-                date_and_time,
-                name,
-                email,
-                phone,
-                comment,
-                paid,
-                expires_at,
-                mailed
-            )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            `,
-            [
-                bookingID,
-                toMYSQLDate(newBookingStart),
-                name,
-                email,
-                phone || "",
-                comment || "",
-                false,
-                expiresAt,
-                false
-            ]
-        );
-
-        await connection.commit();
-
-    } catch (err) {
-        await connection.rollback();
-        throw err;
-    } finally {
-      connection.release();
+      console.error(
+        `[${requestID}] ROLLBACK FAILED:`,
+        rollbackError
+      );
     }
 
-    const zonedDate = toZonedTime(
-        dateAndTime,
-        TIME_ZONE
-      );
-
-      const date = format(
-        zonedDate,
-        "EEEE, MMMM d, yyyy"
-      );
-
-      const time = format(
-        zonedDate,
-        "h:mm a"
-      );
-
-    const session = await stripe.checkout.sessions.create({
-        mode: "payment",
-
-        line_items: [
-            {
-                price_data: {
-                    currency: "usd",
-
-                    product_data: {
-                      name:
-                        `Nails By Jess - Appointment on ${date} at ${time}`,
-                    },
-
-                    unit_amount: 2000
-                },
-
-                quantity: 1
-            }
-        ],
-
-        metadata: {
-            bookingID
-        },
-
-        success_url:
-            "https://jesseniasnailss.com/booking-success?session_id={CHECKOUT_SESSION_ID}",
-
-        cancel_url:
-            "https://jesseniasnailss.com/try-again"
+    return res.status(500).json({
+      success: false,
+      message: err.message,
+      requestID
     });
 
-    await db.execute(
-        `
-        UPDATE bookings
-        SET stripe_session_id = ?
-        WHERE id = ?
-        `,
-        [session.id, bookingID]
+  } finally {
+
+    connection.release();
+
+    console.log(
+      `[${requestID}] DATABASE CONNECTION RELEASED`
+    );
+  }
+
+
+  /*
+  --------------------------------------------------
+  STEP 10 — FORMAT STRIPE DATE
+  --------------------------------------------------
+  */
+
+  console.log(
+    `[${requestID}] STEP 10: FORMAT STRIPE DATE`
+  );
+
+  let zonedDate;
+  let displayDate;
+  let displayTime;
+
+  try {
+
+    zonedDate = toZonedTime(
+      dateAndTime,
+      TIME_ZONE
     );
 
-    return res.json({
-        success: true,
-        bookingID,
-        url: session.url
+    console.log(
+      `[${requestID}] zonedDate:`,
+      zonedDate.toString()
+    );
+
+    displayDate = format(
+      zonedDate,
+      "EEEE, MMMM d, yyyy"
+    );
+
+    displayTime = format(
+      zonedDate,
+      "h:mm a"
+    );
+
+    console.log(
+      `[${requestID}] Stripe display date:`,
+      displayDate
+    );
+
+    console.log(
+      `[${requestID}] Stripe display time:`,
+      displayTime
+    );
+
+  } catch (err) {
+
+    console.error(
+      `[${requestID}] !!! STEP 10 FAILED`
+    );
+
+    console.error(err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Stripe date formatting failed.",
+      requestID
     });
+  }
+
+
+  /*
+  --------------------------------------------------
+  STEP 11 — CREATE STRIPE SESSION
+  --------------------------------------------------
+  */
+
+  console.log(
+    `[${requestID}] STEP 11: CREATE STRIPE SESSION`
+  );
+
+  let session;
+
+  try {
+
+    session = await stripe.checkout.sessions.create({
+
+      mode: "payment",
+
+      line_items: [
+        {
+          price_data: {
+            currency: "usd",
+
+            product_data: {
+              name:
+                `Nails By Jess - Appointment on ${displayDate} at ${displayTime}`,
+            },
+
+            unit_amount: 2000
+          },
+
+          quantity: 1
+        }
+      ],
+
+      metadata: {
+        bookingID
+      },
+
+      success_url:
+        "https://mydomain.com/booking-success?session_id={CHECKOUT_SESSION_ID}",
+
+      cancel_url:
+        "https://mydomain.com/try-again"
+    });
+
+
+    console.log(
+      `[${requestID}] STRIPE SESSION CREATED`
+    );
+
+    console.log(
+      `[${requestID}] STRIPE SESSION ID:`,
+      session.id
+    );
+
+  } catch (err) {
+
+    console.error(
+      `[${requestID}] !!! STEP 11 STRIPE FAILED`
+    );
+
+    console.error(err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Stripe Checkout creation failed.",
+      requestID
+    });
+  }
+
+
+  /*
+  --------------------------------------------------
+  STEP 12 — SAVE STRIPE SESSION ID
+  --------------------------------------------------
+  */
+
+  console.log(
+    `[${requestID}] STEP 12: SAVE STRIPE SESSION ID`
+  );
+
+  try {
+
+    await db.execute(
+      `
+      UPDATE bookings
+      SET stripe_session_id = ?
+      WHERE id = ?
+      `,
+      [
+        session.id,
+        bookingID
+      ]
+    );
+
+    console.log(
+      `[${requestID}] STRIPE SESSION ID SAVED`
+    );
+
+  } catch (err) {
+
+    console.error(
+      `[${requestID}] !!! STEP 12 FAILED`
+    );
+
+    console.error(err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Could not save Stripe session ID.",
+      requestID
+    });
+  }
+
+
+  /*
+  --------------------------------------------------
+  FINAL
+  --------------------------------------------------
+  */
+
+  console.log("");
+  console.log(
+    `[${requestID}] ========================================`
+  );
+  console.log(
+    `[${requestID}] BOOKING REQUEST SUCCESS`
+  );
+  console.log(
+    `[${requestID}] BOOKING ID: ${bookingID}`
+  );
+  console.log(
+    `[${requestID}] ========================================`
+  );
+  console.log("");
+
+
+  return res.json({
+    success: true,
+    bookingID,
+    url: session.url
+  });
 });
 
 async function readRow(bookingID) {
