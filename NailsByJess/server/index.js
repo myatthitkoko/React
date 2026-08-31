@@ -170,13 +170,20 @@ function toMYSQLDate(date) {
   .replace("T", " ");
 }
 
-async function readBookings() {
-  const [rows] = await db.query("SELECT * FROM bookings WHERE paid = true");
+async function readActiveBookings() {
+  const [rows] = await db.query(`
+    SELECT *
+    FROM bookings
+    WHERE
+      paid = true
+      OR (paid = false AND expires_at > NOW())
+  `);
+
   return rows;
 };
 
 async function checkBooking(newBooking) {
-  const bookings = await readBookings();
+  const bookings = await readActiveBookings();
 
   const newBookingStart = new Date(newBooking.dateAndTime);
   const newBookingEnd = new Date(newBookingStart.getTime() + 3 * 60 * 60 * 1000);
@@ -222,7 +229,7 @@ app.get("/api/availability/:date", async (req, res) => {
   const day = selectedDate.getDay();
   const possibleSlots = (day === 0  || day === 6) ? generateSlots(10, 17, date): generateSlots(16, 19, date);
 
-  const bookings = await readBookings();
+  const bookings = await readActiveBookings();
 
   const dayStart = fromZonedTime(
     `${date}T00:00:00`, "America/Los_Angeles"
