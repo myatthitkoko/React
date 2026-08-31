@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import styles from "../styleSheets/Confirmations.module.css"
 
 export default function SuccessPage() {
     const [booking, setBooking] = useState(null);
@@ -53,27 +54,33 @@ export default function SuccessPage() {
     }
 
     return (
-        <div>
-            <h1>Appointment Confirmed!</h1>
-            <p>
-                <strong>Booking ID:</strong> {booking.bookingID}
-            </p>
-            <p>
-                <strong>Name: </strong> {booking.name}
-            </p>
-            <p>
-                <strong>Email: </strong> {booking.email}
-            </p>
-            <p>
-                <strong>Date: </strong> 
-                {new Date(booking.dateAndTime).toLocaleString("en-US", {
-                    timeZone: "America/Los_Angeles",
-                    dateStyle: "long",
-                    timeStyle: "short",
-                })}
-            </p>
+        <section className={styles.page}>
+            <div className={styles.rectangle}>
+                <div className={styles.imgContainer}>
+                    <img src="checked-svgrepo-com.svg" alt="checkmark"/>
+                </div>
+                <h1>Appointment Confirmation</h1>
+                <hr/>
+                <p>
+                    <strong>Booking ID:</strong> {booking.bookingID}
+                </p>
+                <p>
+                    <strong>Name: </strong> {booking.name}
+                </p>
+                <p>
+                    <strong>Email: </strong> {booking.email}
+                </p>
+                <p>
+                    <strong>Date: </strong> 
+                    {new Date(booking.dateAndTime).toLocaleString("en-US", {
+                        timeZone: "America/Los_Angeles",
+                        dateStyle: "long",
+                        timeStyle: "short",
+                    })}
+                </p>
 
-            <h2>A confirmation email has been sent to your inbox. Please check your spam or junk folder if not found.</h2>
-        </div>
+                <h3>A confirmation email has been sent to your inbox. Please check your spam or junk folder if not found.</h3>
+            </div>
+        </section>
     );
 }
