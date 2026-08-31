@@ -176,7 +176,6 @@ async function readActiveBookings() {
     FROM bookings
     WHERE
       paid = true
-      OR (paid = false AND expires_at > NOW())
   `);
 
   return rows;
