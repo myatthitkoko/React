@@ -336,6 +336,8 @@ app.post("/api/booking", async (req, res) => {
     comment
   } = req.body;
 
+  const bookingID = randomBytes(8).toString("base64url");
+
 
   /*
   --------------------------------------------------
@@ -831,10 +833,10 @@ app.post("/api/booking", async (req, res) => {
       },
 
       success_url:
-        "https://mydomain.com/booking-success?session_id={CHECKOUT_SESSION_ID}",
+        "https://jesseniasnailss.com/booking-success?session_id={CHECKOUT_SESSION_ID}",
 
       cancel_url:
-        "https://mydomain.com/try-again"
+        "https://jesseniasnailss.com/try-again"
     });
 
 
