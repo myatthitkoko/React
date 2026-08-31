@@ -65,7 +65,12 @@ export default function SuccessPage() {
                 <strong>Email: </strong> {booking.email}
             </p>
             <p>
-                <strong>Date: </strong> {booking.dateAndTime.toISOString().slice(0, 19).replace("T", " ")}
+                <strong>Date: </strong> 
+                {new Date(booking.dateAndTime).toLocaleString("en-US", {
+                    timeZone: "America/Los_Angeles",
+                    dateStyle: "long",
+                    timeStyle: "short",
+                })}
             </p>
 
             <h2>A confirmation email has been sent to your inbox. Please check your spam or junk folder if not found.</h2>
