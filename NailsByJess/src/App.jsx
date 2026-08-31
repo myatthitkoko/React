@@ -6,6 +6,8 @@ import ServicePage from './pages/Services'
 import Header from './components/Header'
 import Footer from './components/Footnotes'
 import NotFound from './components/NotFound';
+import SuccessPage from './components/SuccessPage';
+import FailurePage from './components/FaillurePage';
 import { useEffect } from 'react';
 
 function App() {
@@ -26,6 +28,8 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/booking" element={<BookingPage />} />
         <Route path="/services" element={<ServicePage />} />
+        <Route path="/booking-success" element={<SuccessPage />} />
+        <Route path="/try-again" element={<FailurePage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />

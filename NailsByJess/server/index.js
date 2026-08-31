@@ -346,10 +346,10 @@ app.post(
           },
 
           success_url:
-            "https://jesseniasnailss.com/booking",
+            "https://jesseniasnailss.com/booking-success?session_id={CHECKOUT_SESSION_ID}",
 
           cancel_url:
-            "https://jesseniasnailss.com/booking",
+            "https://jesseniasnailss.com/try-again",
         });
 
       return res.json({
@@ -371,6 +371,39 @@ app.post(
     }
   }
 );
+
+app.get("/api/booking/success", async (req, res) => {
+  const { session_id } = req.query;
+
+  if (!session_id) {
+    return res.status(400).send("No session ID received.");
+  }
+
+  const session = await stripe.checkout.sessions.retrieve(session_id);
+
+  if (session.payment_status !== "paid") {
+    return res.status(400).send("No payment received.");
+  }
+
+  const {
+    bookingID,
+    dateAndTime,
+    name,
+    email,
+    phone,
+    comment
+  } = session.metadata;
+
+  return res.json({
+    success: true,
+    bookingID,
+    dateAndTime,
+    name,
+    email,
+    phone,
+    comment
+  });
+});
 
 /*One-Time Authorization for Refresh Token
 app.get("/api/google/auth", (req, res) => {
