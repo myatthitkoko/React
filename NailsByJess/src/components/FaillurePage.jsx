@@ -1,3 +1,5 @@
+import styles from "../styleSheets/Confirmations.module.css"
+
 export default function FailurePage() {
     return (
         <section className={styles.redPage}>

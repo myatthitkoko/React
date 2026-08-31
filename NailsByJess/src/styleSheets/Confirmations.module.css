@@ -12,8 +12,8 @@
 }
 
 .rectangle {
-  background: white;
-  max-width: 300px;
+  background: var(--cream);
+  max-width: 350px;
   padding: 30px;
   border-radius: 30px;
   margin: 30px;
@@ -23,7 +23,18 @@
   width: 5em;
 }
 
+.rectangle h3 {
+    text-align: left;
+    font-size: 1em;
+}
+
 .imgContainer {
   display: flex;
   justify-content: center;
+}
+
+@media (min-width: 800px) {
+    .rectangle {
+        max-width: 700px;
+    }
 }
