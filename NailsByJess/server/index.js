@@ -67,6 +67,7 @@ app.post(
             paid = true,
             stripe_session_id = ?
           WHERE id = ?
+            AND paid = false
           `,
           [
             session.id,
@@ -77,25 +78,16 @@ app.post(
       const booking = await readRowWithRetry(bookingID);
 
       if (!booking) {
-        console.error(`Critical: Booking ${bookingID} could not be found after payment.`);
         return res.sendStatus(500); 
       }
 
-  
-      console.log("FOUND BOOKING ROW:", booking);
-      console.log("RAW DATE_AND_TIME VALUE:", booking.date_and_time, typeof booking.date_and_time);
-
       if (!booking.mailed) {
-        
-        const parsedDate = booking.date_and_time ? new Date(booking.date_and_time) : new Date();
-
         await sendMail(
           booking.email,
           booking.name,
           bookingID,
-          parsedDate
+          new Date(booking.date_and_time)
         );
-        
         await db.execute(
           `
           UPDATE bookings
@@ -195,15 +187,10 @@ const googleOverlaps = (slotStart, event) => {
 };
 
 function toMYSQLDate(date) {
-  const parsed = new Date(date);
-  if (isNaN(parsed.getTime())) {
-    console.error("INVALID DATE PASSED TO toMYSQLDate:", date);
-    return new Date().toISOString().slice(0, 19).replace("T", " ");
-  }
-  return parsed
-    .toISOString()
-    .slice(0, 19)
-    .replace("T", " ");
+  return new Date(date)
+  .toISOString()
+  .slice(0, 19)
+  .replace("T", " ");
 }
 
 async function readActiveBookings() {
