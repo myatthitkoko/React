@@ -76,39 +76,6 @@ app.post(
 
       const booking = await readRowWithRetry(bookingID);
 
-      console.log("========== WEBHOOK BOOKING DEBUG ==========");
-      console.log("BOOKING ID:", bookingID);
-      console.log("BOOKING:", booking);
-
-      if (booking) {
-          console.log(
-              "date_and_time:",
-              booking.date_and_time
-          );
-
-          console.log(
-              "date_and_time typeof:",
-              typeof booking.date_and_time
-          );
-
-          console.log(
-              "date_and_time instanceof Date:",
-              booking.date_and_time instanceof Date
-          );
-
-          console.log(
-              "date_and_time getTime:",
-              booking.date_and_time instanceof Date
-                  ? booking.date_and_time.getTime()
-                  : "NOT A DATE"
-          );
-
-          console.log(
-              "date_and_time String:",
-              String(booking.date_and_time)
-          );
-      }
-
       if (!booking) {
         console.error(`Critical: Booking ${bookingID} could not be found after payment.`);
         return res.sendStatus(500); 
@@ -228,31 +195,21 @@ const googleOverlaps = (slotStart, event) => {
 };
 
 function toMYSQLDate(date) {
-  console.log("========== toMYSQLDate ==========");
-    console.log("RAW date:", date);
-    console.log("RAW TYPE:", typeof date);
-    console.log("RAW instanceof Date:", date instanceof Date);
-
-    const parsedDate = new Date(date);
-
-    console.log("PARSED date:", parsedDate);
-    console.log("PARSED TIME:", parsedDate.getTime());
-    console.log("VALID:", !Number.isNaN(parsedDate.getTime()));
-
-    if (Number.isNaN(parsedDate.getTime())) {
-        console.error(
-            "INVALID DATE PASSED TO toMYSQLDate:",
-            date
-        );
-        throw new Error(
-            `Invalid date passed to toMYSQLDate: ${String(date)}`
-        );
-    }
-
-    return parsedDate
-        .toISOString()
-        .slice(0, 19)
-        .replace("T", " ");
+  if (!date) {
+    console.error("toMYSQLDate received null or undefined date");
+    return null;
+  }
+  
+  const parsed = new Date(date);
+  if (isNaN(parsed.getTime())) {
+    console.error("INVALID DATE PASSED TO toMYSQLDate:", date);
+    return null;
+  }
+  
+  return parsed
+    .toISOString()
+    .slice(0, 19)
+    .replace("T", " ");
 }
 
 async function readActiveBookings() {
@@ -366,8 +323,6 @@ app.get("/api/availability/:date", async (req, res) => {
 });
 
 app.post("/api/booking", async (req, res) => {
-    console.log("Incoming booking request body:", req.body); // Let's see what the frontend is actually sending
-
     const {
         dateAndTime,
         name,
@@ -376,22 +331,9 @@ app.post("/api/booking", async (req, res) => {
         comment
     } = req.body;
 
-    if (!dateAndTime) {
-        return res.status(400).json({
-            success: false,
-            message: "Missing dateAndTime in request body."
-        });
-    }
-
     const bookingID = randomBytes(8).toString("base64url");
-    const newBookingStart = new Date(dateAndTime);
 
-    if (isNaN(newBookingStart.getTime())) {
-        return res.status(400).json({
-            success: false,
-            message: "Invalid date format received for dateAndTime."
-        });
-    }
+    const newBookingStart = new Date(dateAndTime);
 
     const newBookingEnd = new Date(
         newBookingStart.getTime() + 3 * 60 * 60 * 1000
@@ -421,6 +363,7 @@ app.post("/api/booking", async (req, res) => {
 
         if (rows.length > 0) {
             await connection.rollback();
+
             return res.status(409).json({
                 success: false,
                 message: "This time slot is currently on hold by another active user."
@@ -429,7 +372,6 @@ app.post("/api/booking", async (req, res) => {
 
         const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
 
-        // Map everything explicitly to ensure NO 'undefined' can ever reach mysql2
         await connection.execute(
             `
             INSERT INTO bookings
@@ -449,12 +391,12 @@ app.post("/api/booking", async (req, res) => {
             [
                 bookingID,
                 toMYSQLDate(newBookingStart),
-                name ?? "Unknown",
-                email ?? "no-email@provided.com",
-                phone ?? null,
-                comment ?? null,
+                name,
+                email,
+                phone || null,
+                comment || null,
                 false,
-                toMYSQLDate(expiresAt),
+                expiresAt,
                 false
             ]
         );
@@ -463,35 +405,55 @@ app.post("/api/booking", async (req, res) => {
 
     } catch (err) {
         await connection.rollback();
-        console.error("Booking creation error:", err);
         throw err;
     } finally {
-        connection.release();
+      connection.release();
     }
 
-    const zonedDate = toZonedTime(dateAndTime, TIME_ZONE);
-    const date = format(zonedDate, "EEEE, MMMM d, yyyy");
-    const time = format(zonedDate, "h:mm a");
+    const zonedDate = toZonedTime(
+        dateAndTime,
+        TIME_ZONE
+      );
+
+      const date = format(
+        zonedDate,
+        "EEEE, MMMM d, yyyy"
+      );
+
+      const time = format(
+        zonedDate,
+        "h:mm a"
+      );
 
     const session = await stripe.checkout.sessions.create({
         mode: "payment",
+
         line_items: [
             {
                 price_data: {
                     currency: "usd",
+
                     product_data: {
-                        name: `Nails By Jess - Appointment on ${date} at ${time}`,
+                      name:
+                        `Nails By Jess - Appointment on ${date} at ${time}`,
                     },
+
                     unit_amount: 2000
                 },
+
                 quantity: 1
             }
         ],
+
         metadata: {
             bookingID
         },
-        success_url: "https://jesseniasnailss.com/booking-success?session_id={CHECKOUT_SESSION_ID}",
-        cancel_url: "https://jesseniasnailss.com/try-again"
+
+        success_url:
+            "https://jesseniasnailss.com/booking-success?session_id={CHECKOUT_SESSION_ID}",
+
+        cancel_url:
+            "https://jesseniasnailss.com/try-again"
     });
 
     await db.execute(
