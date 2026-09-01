@@ -164,10 +164,20 @@ const googleOverlaps = (slotStart, event) => {
 };
 
 function toMYSQLDate(date) {
-  return new Date(date)
-  .toISOString()
-  .slice(0, 19)
-  .replace("T", " ");
+  const parsedDate = new Date(date);
+
+  console.log("toMYSQLDate received:", date);
+  console.log("parsed:", parsedDate);
+  console.log("timestamp:", parsedDate.getTime());
+
+  if (Number.isNaN(parsedDate.getTime())) {
+    throw new Error(`INVALID DATE IN toMYSQLDate: ${date}`);
+  }
+
+  return parsedDate
+    .toISOString()
+    .slice(0, 19)
+    .replace("T", " ");
 }
 
 async function readActiveBookings() {
@@ -301,6 +311,13 @@ app.post("/api/booking", async (req, res) => {
 
     try {
         await connection.beginTransaction();
+        console.log({
+          dateAndTime,
+          newBookingStart: newBookingStart.toString(),
+          newBookingStartTime: newBookingStart.getTime(),
+          newBookingEnd: newBookingEnd.toString(),
+          newBookingEndTime: newBookingEnd.getTime()
+        });
         const [rows] = await connection.execute(
             `
             SELECT *
