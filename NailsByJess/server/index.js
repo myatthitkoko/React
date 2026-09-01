@@ -195,22 +195,28 @@ const googleOverlaps = (slotStart, event) => {
 };
 
 function toMYSQLDate(date) {
-  if (!date) {
-    console.error("toMYSQLDate received null or undefined date");
-    return null;
-  }
-  
   const parsed = new Date(date);
   if (isNaN(parsed.getTime())) {
     console.error("INVALID DATE PASSED TO toMYSQLDate:", date);
-    return null;
+    return new Date().toISOString().slice(0, 19).replace("T", " ");
   }
-  
   return parsed
     .toISOString()
     .slice(0, 19)
     .replace("T", " ");
 }
+
+async function readActiveBookings() {
+  const [rows] = await db.query(`
+    SELECT *
+    FROM bookings
+    WHERE
+      paid = true
+      OR (paid = false AND expires_at > NOW())
+  `);
+
+  return rows;
+};
 
 async function checkBooking(newBooking) {
   const bookings = await readActiveBookings();
@@ -381,8 +387,8 @@ app.post("/api/booking", async (req, res) => {
                 toMYSQLDate(newBookingStart),
                 name,
                 email,
-                phone || null,
-                comment || null,
+                phone || "",
+                comment || "",
                 false,
                 expiresAt,
                 false
