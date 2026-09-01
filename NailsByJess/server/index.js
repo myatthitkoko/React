@@ -20,7 +20,13 @@ app.post(
   "/api/stripe-webhook",
   express.raw({ type: "application/json" }),
   async (req, res) => {
+    console.log("========== WEBHOOK START ==========");
+
     const sig = req.headers["stripe-signature"];
+
+    console.log("HAS STRIPE SIGNATURE:", Boolean(sig));
+    console.log("BODY TYPE:", typeof req.body);
+    console.log("BODY IS BUFFER:", Buffer.isBuffer(req.body));
 
     let event;
 
@@ -30,116 +36,87 @@ app.post(
         sig,
         endpointSecret
       );
-    } catch (err) {
-      console.error(
-        "Webhook signature verification failed:",
-        err.message
-      );
 
+      console.log("========== SIGNATURE VERIFIED ==========");
+      console.log("EVENT ID:", event.id);
+      console.log("EVENT TYPE:", event.type);
+      console.log("LIVE MODE:", event.livemode);
+    } catch (err) {
+      console.error("WEBHOOK SIGNATURE FAILED:", err);
       return res.sendStatus(400);
     }
 
-    console.log("Stripe event:", event.type);
-    console.log("LIVE MODE:", event.livemode);
-
     try {
-      if (event.type === "checkout.session.completed") {
-        const session = event.data.object;
+      if (event.type !== "checkout.session.completed") {
+        console.log("IGNORING EVENT:", event.type);
+        return res.json({ received: true });
+      }
 
-        const {
-          bookingID,
-        } = session.metadata || {};
+      console.log("========== CHECKOUT COMPLETED ==========");
 
-        if (!bookingID) {
-          console.error(
-            "Missing booking ID in Stripe metadata"
-          );
+      const session = event.data.object;
 
-          return res.sendStatus(400);
-        }
+      console.log("SESSION ID:", session.id);
+      console.log("SESSION PAYMENT STATUS:", session.payment_status);
+      console.log("SESSION LIVE MODE:", session.livemode);
+      console.log("SESSION METADATA:", session.metadata);
 
-        console.log("ABOUT TO UPDATE BOOKING:", {
-          bookingID,
-          sessionID: session.id,
-          livemode: event.livemode
-        });
+      const { bookingID } = session.metadata || {};
 
-        const [result] = await db.execute(
-          `
-          UPDATE bookings
-          SET
-            paid = true,
-            stripe_session_id = ?
-          WHERE id = ?
-          `,
-          [
-            session.id,
-            bookingID
-          ]
-        );
+      console.log("BOOKING ID FROM STRIPE:", bookingID);
 
-        console.log("UPDATE RESULT:", {
-          bookingID,
-          stripeSessionID: session.id,
-          affectedRows: result.affectedRows,
-          changedRows: result.changedRows
-        });
+      if (!bookingID) {
+        console.error("NO BOOKING ID IN STRIPE METADATA");
+        return res.sendStatus(400);
+      }
 
-      const booking = await readRowWithRetry(bookingID);
+      console.log("========== BEFORE DB UPDATE ==========");
 
-      console.log("========== WEBHOOK BOOKING DEBUG ==========");
-      console.log("BOOKING ID:", bookingID);
+      const [result] = await db.execute(
+        `
+        UPDATE bookings
+        SET
+          paid = true,
+          stripe_session_id = ?
+        WHERE id = ?
+          AND paid = false
+        `,
+        [
+          session.id,
+          bookingID
+        ]
+      );
+
+      console.log("========== DB UPDATE FINISHED ==========");
+      console.log("AFFECTED ROWS:", result.affectedRows);
+      console.log("CHANGED ROWS:", result.changedRows);
+
+      const booking = await readRow(bookingID);
+
+      console.log("========== READ BOOKING ==========");
       console.log("BOOKING:", booking);
 
-      if (booking) {
-          console.log(
-              "date_and_time:",
-              booking.date_and_time
-          );
-
-          console.log(
-              "date_and_time typeof:",
-              typeof booking.date_and_time
-          );
-
-          console.log(
-              "date_and_time instanceof Date:",
-              booking.date_and_time instanceof Date
-          );
-
-          console.log(
-              "date_and_time getTime:",
-              booking.date_and_time instanceof Date
-                  ? booking.date_and_time.getTime()
-                  : "NOT A DATE"
-          );
-
-          console.log(
-              "date_and_time String:",
-              String(booking.date_and_time)
-          );
-      }
-
       if (!booking) {
-        console.error(`Critical: Booking ${bookingID} could not be found after payment.`);
-        return res.sendStatus(500); 
-      }
+        console.error(
+          "BOOKING DOES NOT EXIST AFTER UPDATE:",
+          bookingID
+        );
 
-  
-      console.log("FOUND BOOKING ROW:", booking);
-      console.log("RAW DATE_AND_TIME VALUE:", booking.date_and_time, typeof booking.date_and_time);
+        return res.sendStatus(500);
+      }
 
       if (!booking.mailed) {
-        
-        const parsedDate = booking.date_and_time ? new Date(booking.date_and_time) : new Date();
+        console.log("========== SENDING EMAIL ==========");
 
         await sendMail(
           booking.email,
           booking.name,
           bookingID,
-          parsedDate
+          new Date(booking.date_and_time)
         );
-        
+
+        console.log("========== EMAIL SENT ==========");
+
         await db.execute(
           `
           UPDATE bookings
@@ -148,18 +125,21 @@ app.post(
           `,
           [bookingID]
         );
-      }
-    }
 
-      res.json({ received: true });
+        console.log("========== MAILED FLAG UPDATED ==========");
+      }
+
+      console.log("========== WEBHOOK SUCCESS ==========");
+
+      return res.json({ received: true });
 
     } catch (err) {
-      console.error(
-        "Stripe webhook processing failed:",
-        err
-      );
+      console.error("========== WEBHOOK PROCESSING FAILED ==========");
+      console.error(err);
+      console.error("ERROR MESSAGE:", err?.message);
+      console.error("ERROR STACK:", err?.stack);
 
-      res.sendStatus(500);
+      return res.sendStatus(500);
     }
   }
 );
