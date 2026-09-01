@@ -79,8 +79,6 @@ app.post(
         );
 
         console.log("UPDATE RESULT:", {
-          bookingID,
-          stripeSessionID: session.id,
           affectedRows: result.affectedRows,
           changedRows: result.changedRows
         });
