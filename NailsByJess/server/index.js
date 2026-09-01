@@ -58,7 +58,11 @@ app.post(
           return res.sendStatus(400);
         }
 
-        console.log("PAYMENT SUCCESSFUL");
+        console.log("ABOUT TO UPDATE BOOKING:", {
+          bookingID,
+          sessionID: session.id,
+          livemode: event.livemode
+        });
 
         const [result] = await db.execute(
           `
@@ -73,6 +77,11 @@ app.post(
             bookingID
           ]
         );
+
+        console.log("UPDATE RESULT:", {
+          affectedRows: result.affectedRows,
+          changedRows: result.changedRows
+        });
 
       const booking = await readRowWithRetry(bookingID);
 
