@@ -281,9 +281,6 @@ app.get("/api/availability/:date", async (req, res) => {
 });
 
 app.post("/api/booking", async (req, res) => {
-  console.log("========== /api/booking ==========");
-    console.log("BODY:", JSON.stringify(req.body, null, 2));
-
     const {
         dateAndTime,
         name,
@@ -291,10 +288,6 @@ app.post("/api/booking", async (req, res) => {
         phone,
         comment
     } = req.body;
-
-    console.log("dateAndTime:", dateAndTime);
-    console.log("dateAndTime type:", typeof dateAndTime);
-
 
     const bookingID = randomBytes(8).toString("base64url");
 
