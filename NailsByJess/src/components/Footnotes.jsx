@@ -28,7 +28,7 @@ export default function Header() {
                             <ul>
                                 <li><Link to='/services'>Pricelist</Link></li>
                                 <li><Link to='/booking'>Calendar</Link></li>
-                                <li><Link to='/booking'>Contact</Link></li>
+                                <li><Link to='/privacy-policy'>Privacy Policy</Link></li>
                             </ul>
                         </div>
                     </div>

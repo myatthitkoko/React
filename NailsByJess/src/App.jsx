@@ -8,6 +8,7 @@ import Footer from './components/Footnotes'
 import NotFound from './components/NotFound';
 import SuccessPage from './components/SuccessPage';
 import FailurePage from './components/FaillurePage';
+import Privacy from './pages/Privacy';
 import { useEffect } from 'react';
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
         <Route path="/services" element={<ServicePage />} />
         <Route path="/booking-success" element={<SuccessPage />} />
         <Route path="/try-again" element={<FailurePage />} />
+        <Route path="/privacy-policy" element={<Privacy />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
