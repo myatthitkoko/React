@@ -1,6 +1,6 @@
 @media (max-width: 800px) and (hover:none) {
 
-body {
+html {
   display: flex;
   justify-content: center;
   align-items: center;

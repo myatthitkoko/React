@@ -8,6 +8,7 @@
   line-height: 5em;
 }
 
+
 .react-calendar--doubleView {
   width: 700px;
 }
@@ -65,7 +66,7 @@
 }
 
 .react-calendar__navigation__label {
-  font-size: 20pt;
+  font-size: 16pt;
   font-weight: bold;
   color: black;
 }
